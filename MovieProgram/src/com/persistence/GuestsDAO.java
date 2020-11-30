@@ -213,12 +213,13 @@ public class GuestsDAO {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, id);
 			rs = pstmt.executeQuery(SQL);
-			while (rs.next()) {
+			if(rs.next())
 				GusId = rs.getString("GusId");
-			}
+			else
+				GusId = "";
 
 		} catch (SQLException sqle) {
-			System.out.println("SELECT문에서 예외 발생");
+			System.out.println("equalId문에서 예외 발생");
 			sqle.printStackTrace();
 		} finally {
 			try {
@@ -253,12 +254,13 @@ public class GuestsDAO {
 			pstmt.setString(1, name);
 			pstmt.setString(1, phone);
 			rs = pstmt.executeQuery(SQL);
-			while (rs.next()) {
+			if(rs.next())
 				GusId = rs.getString("GusId");
-			}
+			else
+				GusId = "";
 
 		} catch (SQLException sqle) {
-			System.out.println("SELECT문에서 예외 발생");
+			System.out.println("findlId문에서 예외 발생");
 			sqle.printStackTrace();
 		} finally {
 			try {

@@ -15,8 +15,7 @@ public class LoginServer {
 		Protocol protocol = null;
 		String[] tmp_data = null;
 		System.out.println("클라이언트 접속 대기중...");
-		
-		
+
 		Socket socket = sSocket.accept();
 		System.out.println("클라이언트 접속");
 
@@ -25,7 +24,7 @@ public class LoginServer {
 		InputStream is = socket.getInputStream();
 
 		boolean program_stop = false;
-		
+
 		while (true) {
 			protocol = new Protocol(); // 새 Protocol 객체 생성 (기본 생성자)
 			byte[] buf = protocol.getPacket(); // 기본 생성자로 생성할 때에는 바이트 배열의 길이가 1000바이트로 지정됨
@@ -160,18 +159,31 @@ public class LoginServer {
 				}
 				break;
 			case Protocol.PT_FIND:
-				switch(packetCode)
-				{
-				case 1: //클라이언트가 id찾기 확인버튼->코드1(고객이름,전화번호) 전송/서버가 수신 후 코드2로 id 전송
+				switch (packetCode) {
+				case 1: // 클라이언트가 id찾기 확인버튼->코드1(고객이름,전화번호) 전송/서버가 수신 후 코드2로 id 전송
 					String[] data = protocol.getData();
 					String name = data[0];
 					String phone = data[1];
-					
+					String result = GuestsDAO.findId(name, phone);
+					if (!result.equals("")) { // id 찾은 결과 존재
+						System.out.println(result);
+						protocol = new Protocol(Protocol.PT_FIND, 2);
+						// id담기
+
+					} else { // id 찾은 결과 없음
+						System.out.println("일치하는 id 없음");
+						protocol = new Protocol(Protocol.PT_FIND, 2);
+						// id담기
+
+					}
+					os.write(protocol.getPacket());
+					System.out.println("id찾기 완료 및 결과 전송 완료");
+					break;
+				case 2:
+
 				}
-				
-			
-				
-			break;
+
+				break;
 			}// end switch
 			if (program_stop)
 				break;
