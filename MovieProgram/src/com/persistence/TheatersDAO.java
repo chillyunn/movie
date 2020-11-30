@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import com.oracle.DBConnection;
 
 public class TheatersDAO {
 	public ArrayList<TheatersDTO> selectAll() {
@@ -16,7 +18,7 @@ public class TheatersDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM Theaters";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -53,7 +55,7 @@ public class TheatersDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT ThtID FROM Theaters";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -82,7 +84,7 @@ public class TheatersDAO {
 		return dtos;
 	}
 
-	public static ArrayList<TheatersDTO> insert(String id, String address) {
+	public ArrayList<TheatersDTO> insert(String id, String address) {
 		ArrayList<TheatersDTO> dtos = new ArrayList<TheatersDTO>();
 
 		PreparedStatement pstmt = null;
@@ -90,7 +92,7 @@ public class TheatersDAO {
 		ResultSet rs = null;
 		String preQuery = "INSERT INTO Theaters(ThtId,ThtAddress) VALUES(?,?)";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, id);
 			pstmt.setString(2, address);
@@ -114,14 +116,14 @@ public class TheatersDAO {
 		return dtos;
 	}
 
-	public static ArrayList<TheatersDTO> update(String ThtId,String ThtAddress) {
+	public ArrayList<TheatersDTO> update(String ThtId, String ThtAddress) {
 		ArrayList<TheatersDTO> dtos = new ArrayList<TheatersDTO>();
 		PreparedStatement pstmt = null;
 		Connection conn = null;
 		String SQL = "UPDATE Theaters SET ThtAddress=? WHERE ThtId=?";
-		
+
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, ThtAddress);
 			pstmt.setString(2, ThtId);
@@ -144,27 +146,5 @@ public class TheatersDAO {
 		}
 		return dtos;
 	}
-	
-	public static Connection getConnection() {
-		Connection conn = null;
-		try {
-			String user = "MOVIE";
-			String pw = "123";
-			String url = "jdbc:oracle:thin:@localhost:1521:xe";
 
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection(url, user, pw);
-
-			System.out.println("Database에 연결되었습니다.\n");
-
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println("DB 드라이버 로딩 실패 :" + cnfe.toString());
-		} catch (SQLException sqle) {
-			System.out.println("DB 접속실패 : " + sqle.toString());
-		} catch (Exception e) {
-			System.out.println("Unkonwn error");
-			e.printStackTrace();
-		}
-		return conn;
-	}
 }

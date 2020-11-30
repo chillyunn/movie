@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.oracle.DBConnection;
+
 public class TicketsDAO {
 	public ArrayList<TicketsDTO> selectAll() {
 		ArrayList<TicketsDTO> dtos = new ArrayList<TicketsDTO>();
@@ -16,7 +18,7 @@ public class TicketsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM Tickets";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -52,16 +54,17 @@ public class TicketsDAO {
 		return dtos;
 	}
 
-	public static ArrayList<TicketsDTO> insert(String TicId, String ScrId, String ThtId, String SeatId, String GusId, String TtId, String MovTitle) {
+	public ArrayList<TicketsDTO> insert(String TicId, String ScrId, String ThtId, String SeatId, String GusId,
+			String TtId, String MovTitle) {
 		ArrayList<TicketsDTO> dtos = new ArrayList<TicketsDTO>();
 
 		PreparedStatement pstmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
 
-		String preQuery = "INSERT INTO Tickets(TicId, ScrId, ThtId, SeatId, GusId, TtId,movTitle) VALUES(?,?,?,?,?,?,?)";
+		String preQuery = "INSERT INTO Tickets(TicId, ScrId, ThtId, SeatId, GusId, TtId) VALUES(?,?,?,?,?,?,?)";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, TicId);
 			pstmt.setString(2, ScrId);
@@ -90,28 +93,4 @@ public class TicketsDAO {
 
 		return dtos;
 	}
-
-	public static Connection getConnection() {
-		Connection conn = null;
-		try {
-			String user = "MOVIE";
-			String pw = "123";
-			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection(url, user, pw);
-
-			System.out.println("Database에 연결되었습니다.\n");
-
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println("DB 드라이버 로딩 실패 :" + cnfe.toString());
-		} catch (SQLException sqle) {
-			System.out.println("DB 접속실패 : " + sqle.toString());
-		} catch (Exception e) {
-			System.out.println("Unkonwn error");
-			e.printStackTrace();
-		}
-		return conn;
-	}
-
 }

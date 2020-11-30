@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.oracle.DBConnection;
+
 public class ScreensDAO {
 
 	public ArrayList<ScreensDTO> selectAll() {
@@ -17,7 +19,7 @@ public class ScreensDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM Screens";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -57,7 +59,7 @@ public class ScreensDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT ScrId, ThtId FROM Screens";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -88,7 +90,7 @@ public class ScreensDAO {
 		return dtos;
 	}
 
-	public static ArrayList<ScreensDTO> insert(String ScrId, String ThtId, String ScrType, String ScrPremium) {
+	public ArrayList<ScreensDTO> insert(String ScrId, String ThtId, String ScrType, String ScrPremium) {
 		ArrayList<ScreensDTO> dtos = new ArrayList<ScreensDTO>();
 
 		PreparedStatement pstmt = null;
@@ -97,7 +99,7 @@ public class ScreensDAO {
 
 		String preQuery = "INSERT INTO Screens(ScrId, ThtId, ScrType, ScrPremium) VALUES(?,?,?,?)";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, ScrId);
 			pstmt.setString(2, ThtId);
@@ -106,7 +108,7 @@ public class ScreensDAO {
 			pstmt.executeUpdate();
 			System.out.println("INSERT성공: " + ScrId);
 		} catch (SQLException sqle) {
-			System.out.println("INSERT문에서 예외 발생");
+			System.out.println("SELECT문에서 예외 발생");
 			sqle.printStackTrace();
 		} finally {
 			try {
@@ -122,29 +124,6 @@ public class ScreensDAO {
 		}
 		return dtos;
 
-	}
-
-	public static Connection getConnection() {
-		Connection conn = null;
-		try {
-			String user = "MOVIE";
-			String pw = "123";
-			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection(url, user, pw);
-
-			System.out.println("Database에 연결되었습니다.\n");
-
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println("DB 드라이버 로딩 실패 :" + cnfe.toString());
-		} catch (SQLException sqle) {
-			System.out.println("DB 접속실패 : " + sqle.toString());
-		} catch (Exception e) {
-			System.out.println("Unkonwn error");
-			e.printStackTrace();
-		}
-		return conn;
 	}
 
 }

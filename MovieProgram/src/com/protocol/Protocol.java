@@ -19,7 +19,7 @@ public class Protocol {
 	public static final int LEN_PROTOCOL_CODE = 1; // 프로토콜 타입 길이
 	public static final int LEN_MAX = 1000; // 패킷이 가질수 있는 최대 길이
 
-	public static final int LEN_DATA_DATE = 12;
+	public static final int LEN_DATA_DATE = 13;
 	public static final int LEN_DATA_ID = 21;
 	public static final int LEN_DATA_PWD = 21;
 	public static final int LEN_DATA_DETAIL = 36; // 나이3 성별1 번호11 이름20
@@ -35,7 +35,7 @@ public class Protocol {
 	public static final int LEN_DATA_BOOKING_ID = 5;
 	public static final int LEN_DATA_REVIEW_ID = 5;
 	public static final int LEN_DATA_REVIEW_CONTENT = 501;
-	public static final int LEN_DATA_REVIEW_GRADE = 2;
+	public static final int LEN_DATA_REVIEW_GRADE = 3;
 	public static final int LEN_DATA_THEATER_DETAIL = 16; // 상영관수2 수익10 상영횟수3
 
 	protected int protocolType;
@@ -75,6 +75,7 @@ public class Protocol {
 				case 2:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
 					break;
+
 				}
 				break;
 			case PT_SIGN_UP:
@@ -351,18 +352,17 @@ public class Protocol {
 		return result;
 	}
 
-	public void setLoginResult(String in) {
+	public void setResult(String in) {
 		System.arraycopy(in.trim().getBytes(), 0, packet, LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE,
 				in.trim().getBytes().length);
 	}
 
-	public String getLoginResult() {
+	public String getResult() {
 		// String(byte[] bytes, int offset, int length)
 		return new String(packet, LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE, 1).trim();
 	}
 
 //	public String getData() {
-//		// String(byte[] bytes, int offset, int length)
 //		return new String(packet, LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE, LEN_MAX - 2).trim();
 //	}
 

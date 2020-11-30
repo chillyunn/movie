@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import com.oracle.DBConnection;
+import java.time.LocalDateTime;
 
 public class ReviewsDAO {
 	public ArrayList<ReviewsDTO> selectAll() {
@@ -16,7 +18,7 @@ public class ReviewsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM Reviews";
 		try {
-			conn = getConnection();
+			conn =DBConnection. getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -51,7 +53,7 @@ public class ReviewsDAO {
 		return dtos;
 	}
 
-	public static ArrayList<ReviewsDTO> insert(String RevId, String GusId, String MovTitle, String RevDate, String RevContent,
+	public ArrayList<ReviewsDTO> insert(String RevId, String GusId, String MovTitle, String RevDate, String RevContent,
 			String RevGrade) {
 		ArrayList<ReviewsDTO> dtos = new ArrayList<ReviewsDTO>();
 
@@ -61,7 +63,7 @@ public class ReviewsDAO {
 
 		String preQuery = "INSERT INTO Reviews(RevId,GusId,MovTitle,RevDate,Revcontent,RevGrade) VALUES(?,?,?,?,?,?)";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, RevId);
 			pstmt.setString(2, GusId);
@@ -72,7 +74,7 @@ public class ReviewsDAO {
 			pstmt.executeUpdate();
 			System.out.println("INSERT성공: " + RevId);
 		} catch (SQLException sqle) {
-			System.out.println("INSERT문에서 예외 발생");
+			System.out.println("SELECT문에서 예외 발생");
 			sqle.printStackTrace();
 		} finally {
 			try {
@@ -87,16 +89,17 @@ public class ReviewsDAO {
 			}
 		}
 		return dtos;
+
 	}
 	
-	public static ArrayList<ReviewsDTO> update(String GusId,String MovTitle, String RevContent, String RevGrade) {
+	public ArrayList<ReviewsDTO> update(String GusId,String MovTitle, String RevContent, String RevGrade) {
 		ArrayList<ReviewsDTO> dtos = new ArrayList<ReviewsDTO>();
 		PreparedStatement pstmt = null;
 		Connection conn = null;
 		String SQL = "UPDATE Reviews SET RevContent=?,RevGrade=?,RevDate=SYSDATE WHERE GusId=? AND MovTitle=?";
 		
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, RevContent);
 			pstmt.setString(2, RevGrade);
@@ -121,28 +124,4 @@ public class ReviewsDAO {
 		}
 		return dtos;
 	}
-	
-	public static Connection getConnection() {
-		Connection conn = null;
-		try {
-			String user = "MOVIE";
-			String pw = "123";
-			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection(url, user, pw);
-
-			System.out.println("Database에 연결되었습니다.\n");
-
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println("DB 드라이버 로딩 실패 :" + cnfe.toString());
-		} catch (SQLException sqle) {
-			System.out.println("DB 접속실패 : " + sqle.toString());
-		} catch (Exception e) {
-			System.out.println("Unkonwn error");
-			e.printStackTrace();
-		}
-		return conn;
-	}
-
 }

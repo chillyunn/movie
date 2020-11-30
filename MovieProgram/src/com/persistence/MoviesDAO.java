@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.oracle.DBConnection;
+
 public class MoviesDAO {
 	public ArrayList<MoviesDTO> selectAll() {
 		ArrayList<MoviesDTO> dtos = new ArrayList<MoviesDTO>();
@@ -16,7 +18,7 @@ public class MoviesDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM Movies";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -63,7 +65,7 @@ public class MoviesDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT MovTitle FROM Movies";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -92,7 +94,7 @@ public class MoviesDAO {
 		return dtos;
 	}
 
-	public static  ArrayList<MoviesDTO> insert(String MovTitle, String MovDirector, String MovActor, String MovGenre,
+	public ArrayList<MoviesDTO> insert(String MovTitle, String MovDirector, String MovActor, String MovGenre,
 			String MovStory, String MovOpenDate, String MovView, String MovRuntime, String MovRating,
 			String MovTrailer) {
 		ArrayList<MoviesDTO> dtos = new ArrayList<MoviesDTO>();
@@ -102,7 +104,7 @@ public class MoviesDAO {
 		ResultSet rs = null;
 		String preQuery = "INSERT INTO Movies(MovTitle,MovDirector,MovActor,MovGenre,MovStory,MovOpenDate,MovView,MovRuntime,MovRating,MovTrailer) VALUES(?,?,?,?,?,?,?,?,?,?)";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, MovTitle);
 			pstmt.setString(2, MovDirector);
@@ -138,36 +140,43 @@ public class MoviesDAO {
 		ArrayList<MoviesDTO> dtos = new ArrayList<MoviesDTO>();
 		PreparedStatement pstmt = null;
 		Connection conn = null;
-		String SQL = "UPDATE Movies SET MovView=? WHERE MovTitle=?";
+		String SQL = "UPDATE Movies SET MovView=?, MovRating=? WHERE MovTitle=?";
 		String SQL2 = "SELECT COUNT(*) FROM Tickets WHERE MovTitle=?";
+
 		String resultView = null;
 		String resultRating = null;
 
 		ResultSet rs = null;
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			conn.setAutoCommit(false);
-			
+
 			pstmt = conn.prepareStatement(SQL2);
 			pstmt.setString(1, title);
 			rs = pstmt.executeQuery();
 			rs.next();
 			resultView = rs.getString(1);
-			
+
 			pstmt = null;
 			rs = null;
 
+			rs = null;
 
 			pstmt = conn.prepareStatement(SQL);
 
 			pstmt.setString(1, resultView);
-			pstmt.setString(2, title);
+			pstmt.setString(2, resultRating);
+			pstmt.setString(3, title);
 
 			pstmt.executeUpdate();
 
 		} catch (SQLException sqle) {
 			System.out.println("UPDATE_BALNCE문에서 예외 발생");
-			if(conn!=null)try{conn.rollback();}catch(SQLException sqle1) {}
+			if (conn != null)
+				try {
+					conn.rollback();
+				} catch (SQLException sqle1) {
+				}
 			sqle.printStackTrace();
 		} finally {
 			try {
@@ -184,28 +193,5 @@ public class MoviesDAO {
 		}
 
 		return dtos;
-	}
-
-	public static Connection getConnection() {
-		Connection conn = null;
-		try {
-			String user = "MOVIE";
-			String pw = "123";
-			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection(url, user, pw);
-
-			System.out.println("Database에 연결되었습니다.\n");
-
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println("DB 드라이버 로딩 실패 :" + cnfe.toString());
-		} catch (SQLException sqle) {
-			System.out.println("DB 접속실패 : " + sqle.toString());
-		} catch (Exception e) {
-			System.out.println("Unkonwn error");
-			e.printStackTrace();
-		}
-		return conn;
 	}
 }

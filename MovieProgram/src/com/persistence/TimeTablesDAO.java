@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.oracle.DBConnection;
+
 public class TimeTablesDAO {
 	public ArrayList<TimeTablesDTO> selectAll() {
 		ArrayList<TimeTablesDTO> dtos = new ArrayList<TimeTablesDTO>();
@@ -16,7 +18,7 @@ public class TimeTablesDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM TimeTables";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -50,7 +52,7 @@ public class TimeTablesDAO {
 		return dtos;
 	}
 
-	public static ArrayList<TimeTablesDTO> insert(String TtId, String MovTitle, String ThtId, String ScrId, String TtTime) {
+	public ArrayList<TimeTablesDTO> insert(String TtId, String MovTitle, String ThtId, String ScrId, String TtTime) {
 		ArrayList<TimeTablesDTO> dtos = new ArrayList<TimeTablesDTO>();
 
 		PreparedStatement pstmt = null;
@@ -59,7 +61,7 @@ public class TimeTablesDAO {
 
 		String preQuery = "INSERT INTO TimeTables(TtId, MovTitle, ThtId, ScrId, TtTime) VALUES(?,?,?,?,?)";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, TtId);
 			pstmt.setString(2, MovTitle);
@@ -69,7 +71,7 @@ public class TimeTablesDAO {
 			pstmt.executeUpdate();
 			System.out.println("INSERT성공: " + TtId);
 		} catch (SQLException sqle) {
-			System.out.println("INSERT문에서 예외 발생");
+			System.out.println("SELECT문에서 예외 발생");
 			sqle.printStackTrace();
 		} finally {
 			try {
@@ -86,28 +88,4 @@ public class TimeTablesDAO {
 
 		return dtos;
 	}
-
-	public static Connection getConnection() {
-		Connection conn = null;
-		try {
-			String user = "MOVIE";
-			String pw = "123";
-			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection(url, user, pw);
-
-			System.out.println("Database에 연결되었습니다.\n");
-
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println("DB 드라이버 로딩 실패 :" + cnfe.toString());
-		} catch (SQLException sqle) {
-			System.out.println("DB 접속실패 : " + sqle.toString());
-		} catch (Exception e) {
-			System.out.println("Unkonwn error");
-			e.printStackTrace();
-		}
-		return conn;
-	}
-
 }

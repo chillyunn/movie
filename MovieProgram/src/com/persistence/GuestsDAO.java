@@ -18,7 +18,7 @@ public class GuestsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM Guests";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -60,7 +60,7 @@ public class GuestsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT GusId FROM Guests";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -97,7 +97,7 @@ public class GuestsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT GusGender FROM Guests";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -134,7 +134,7 @@ public class GuestsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT GusAge FROM Guests";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -164,8 +164,8 @@ public class GuestsDAO {
 		return dtos;
 	}
 
-	public static ArrayList<GuestsDTO> insert(String GusId, String GusPw, String GusName, String GusAge, String GusGender,
-			String GusPhone) {
+	public static ArrayList<GuestsDTO> insert(String GusId, String GusPw, String GusName, String GusAge,
+			String GusGender, String GusPhone) {
 		ArrayList<GuestsDTO> dtos = new ArrayList<GuestsDTO>();
 
 		PreparedStatement pstmt = null;
@@ -173,7 +173,7 @@ public class GuestsDAO {
 		ResultSet rs = null;
 		String preQuery = "INSERT INTO Guests(GusId,GusPw,GusName,GusAge,GusGender,GusPhone) VALUES(?,?,?,?,?,?)";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, GusId);
 			pstmt.setString(2, GusPw);
@@ -200,22 +200,23 @@ public class GuestsDAO {
 		}
 		return dtos;
 	}
-	public static ArrayList<GuestsDTO> isEqual(String id) {
+
+	public static boolean EqualId(String id) {
 		ArrayList<GuestsDTO> dtos = new ArrayList<GuestsDTO>();
 		PreparedStatement pstmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
+		String GusId = null;
 		String SQL = "SELECT GusId FROM Guests WHERE Gusid = ?";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, id);
+			rs = pstmt.executeQuery(SQL);
 			while (rs.next()) {
-				String GusId = rs.getString("GusId");
-
-				GuestsDTO dto = new GuestsDTO(GusId, 0);
-				dtos.add(dto);
+				GusId = rs.getString("GusId");
 			}
+
 		} catch (SQLException sqle) {
 			System.out.println("SELECT문에서 예외 발생");
 			sqle.printStackTrace();
@@ -233,8 +234,12 @@ public class GuestsDAO {
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
+
 		}
-		return dtos;
+		if (id.equals(GusId))
+			return true;
+		else
+			return false;
 	}
 
 	public ArrayList<GuestsDTO> update(String gusId, String pw, String gusName, String gusAge, String gusPhone) {
@@ -243,7 +248,7 @@ public class GuestsDAO {
 		Connection conn = null;
 		String SQL = "UPDATE Guests SET GusPw=?, GusName=?, GusAge=?, GusPhone=? WHERE GusId=?";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 
 			pstmt.setString(1, pw);
@@ -271,26 +276,4 @@ public class GuestsDAO {
 		return dtos;
 	}
 
-	public static Connection getConnection() {
-		Connection conn = null;
-		try {
-			String user = "MOVIE";
-			String pw = "123";
-			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection(url, user, pw);
-
-			System.out.println("Database에 연결되었습니다.\n");
-
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println("DB 드라이버 로딩 실패 :" + cnfe.toString());
-		} catch (SQLException sqle) {
-			System.out.println("DB 접속실패 : " + sqle.toString());
-		} catch (Exception e) {
-			System.out.println("Unkonwn error");
-			e.printStackTrace();
-		}
-		return conn;
-	}
 }

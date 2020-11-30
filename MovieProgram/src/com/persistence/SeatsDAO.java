@@ -5,9 +5,15 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+
+import com.oracle.DBConnection;
 
 public class SeatsDAO {
 	public static ArrayList<SeatsDTO> selectAll() {
@@ -16,9 +22,9 @@ public class SeatsDAO {
 		Connection conn = null;
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM Seats";
-		
+
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -49,6 +55,7 @@ public class SeatsDAO {
 		}
 		return dtos;
 	}
+
 	public static ArrayList<SeatsDTO> insert(String SeatId, String ThtId, String ScrId) {
 		ArrayList<SeatsDTO> dtos = new ArrayList<SeatsDTO>();
 		PreparedStatement pstmt = null;
@@ -57,7 +64,7 @@ public class SeatsDAO {
 
 		String preQuery = "INSERT INTO Seats(SeatId,ThtId,ScrId) VALUES(?,?,?)";
 		try {
-			conn = getConnection();
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, SeatId);
 			pstmt.setString(2, ThtId);
@@ -81,27 +88,5 @@ public class SeatsDAO {
 		}
 		return dtos;
 	}
-	
-	public static Connection getConnection() {
-		Connection conn = null;
-		try {
-			String user = "MOVIE";
-			String pw = "123";
-			String url = "jdbc:oracle:thin:@localhost:1521:xe";
 
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection(url, user, pw);
-
-			System.out.println("Database에 연결되었습니다.\n");
-
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println("DB 드라이버 로딩 실패 :" + cnfe.toString());
-		} catch (SQLException sqle) {
-			System.out.println("DB 접속실패 : " + sqle.toString());
-		} catch (Exception e) {
-			System.out.println("Unkonwn error");
-			e.printStackTrace();
-		}
-		return conn;
-	}
 }
