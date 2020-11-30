@@ -105,6 +105,7 @@ public class LoginServer {
 					os.write(protocol.getPacket());
 					break;
 				}
+				break;
 			case Protocol.PT_SIGN_UP:
 				switch (packetCode) {
 				case 1: // 회원가입 정보 수신 후 DB에 등록 -> code2 받고 계좌등록 gui
@@ -155,11 +156,20 @@ public class LoginServer {
 					System.out.println("계좌등록 완료 및 결과 전송 완료");
 					break;
 				}
+				break;
 			case Protocol.PT_FIND:
+				switch(packetCode)
+				{
+				case 1: //클라이언트가 id찾기 확인버튼->코드1(고객이름,전화번호) 전송/서버가 수신 후 코드2로 id 전송
+					String[] data = protocol.getData();
+					String name = data[0];
+					String phone = data[1];
+					
+				}
 				
-			{
+			
 				
-			}
+			break;
 			}// end switch
 			if (program_stop)
 				break;

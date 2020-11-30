@@ -241,6 +241,43 @@ public class GuestsDAO {
 		else
 			return false;
 	}
+	public static String findId(String name,String phone) {
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		String GusId = null;
+		String SQL = "SELECT GusId FROM Guests WHERE GusName = ? and GusPhone = ?";
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, name);
+			pstmt.setString(1, phone);
+			rs = pstmt.executeQuery(SQL);
+			while (rs.next()) {
+				GusId = rs.getString("GusId");
+			}
+
+		} catch (SQLException sqle) {
+			System.out.println("SELECT문에서 예외 발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+
+		}
+		return GusId;
+	}
 
 	public ArrayList<GuestsDTO> update(String gusId, String pw, String gusName, String gusAge, String gusPhone) {
 		ArrayList<GuestsDTO> dtos = new ArrayList<GuestsDTO>();
