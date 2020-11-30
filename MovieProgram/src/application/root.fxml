@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
+
+<AnchorPane styleClass="root"  xmlns:fx="http://javafx.com/fxml"  fx:controller="application.RootController"
+	prefHeight="194.0" prefWidth="300.0" >
+	<children>
+		<Label id="welcome-text" layoutX="40.0" layoutY="14.0" text="Welcome" />   
+		<Label layoutX="42.0" layoutY="80.0" text="아이디" />
+		<Label layoutX="42.0" layoutY="118.0" text="패스워드" />
+		<TextField fx:id="txtTitle" layoutX="120.0" layoutY="76.0" />
+		<PasswordField fx:id="txtPassword" layoutX="120.0" layoutY="114.0" />
+		<Button fx:id="btnLogin" layoutX="97.0" layoutY="158.0" styleClass="button" text="로그인" onAction="#handleBtnLoginAction"/>
+		<Button fx:id="btnLogin" layoutX="164.0" layoutY="158.0" styleClass="button" text="취소" onAction="#handleBtnCancelAction"/>
+	</children>
+</AnchorPane>
