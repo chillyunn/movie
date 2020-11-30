@@ -15,6 +15,8 @@ public class LoginServer {
 		Protocol protocol = null;
 		String[] tmp_data = null;
 		System.out.println("클라이언트 접속 대기중...");
+		
+		
 		Socket socket = sSocket.accept();
 		System.out.println("클라이언트 접속");
 
@@ -23,7 +25,7 @@ public class LoginServer {
 		InputStream is = socket.getInputStream();
 
 		boolean program_stop = false;
-
+		
 		while (true) {
 			protocol = new Protocol(); // 새 Protocol 객체 생성 (기본 생성자)
 			byte[] buf = protocol.getPacket(); // 기본 생성자로 생성할 때에는 바이트 배열의 길이가 1000바이트로 지정됨

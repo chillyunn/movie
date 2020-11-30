@@ -45,7 +45,7 @@ public class LoginClient {
 
 				case 2:
 					System.out.println("서버가 로그인 결과 전송.");
-					String result = protocol.getLoginResult();
+					String result = protocol.getResult();
 					if (result.equals("0")) {
 						System.out.println("로그인 성공");
 					} else if (result.equals("1")) {

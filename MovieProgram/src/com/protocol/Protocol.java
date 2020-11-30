@@ -85,7 +85,7 @@ public class Protocol {
 							+ LEN_DATA_DETAIL];
 					break;
 				case 2:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
 					break;
 				case 3:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_ID];
@@ -94,12 +94,9 @@ public class Protocol {
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
 					break;
 				case 5:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE];
-					break;
-				case 6:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_ACCOUNT];
 					break;
-				case 7:
+				case 6:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
 					break;
 				}
