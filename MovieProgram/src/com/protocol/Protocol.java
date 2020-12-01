@@ -152,10 +152,10 @@ public class Protocol {
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
 					break;
 				case 9:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE];
+					packet = new byte[LEN_MAX];
 					break;
 				case 10:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_THEATER_SCREEN + LEN_DATA_SEATS];
+					packet = new byte[LEN_MAX];
 					break;
 				case 11:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_THEATER_ADDRESS];

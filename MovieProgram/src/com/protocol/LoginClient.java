@@ -73,22 +73,23 @@ public class LoginClient {
 					{
 					System.out.println(a);
 					}
-					}
 
-					String result = protocol.getResult();
-					System.out.println(result);
+					
 					break;
 				case 10:
-					result = protocol.getResult();
-					System.out.println(result);
+					result = protocol.getData();
+					for(String a:result)
+				{
+				System.out.println(a);
+				}
 					break;
 					//
 				}
 
 			}
-		}
 		os.close();
 		is.close();
 		socket.close();
+		}	
 	}
 }
