@@ -15,7 +15,10 @@ public class LoginClient {
 		Protocol protocol = new Protocol();
 		byte[] buf = protocol.getPacket();
 		
-		protocol = new Protocol(Protocol.PT_THEATER, 1);
+		protocol = new Protocol(Protocol.PT_THEATER, 9);
+		String[] tmp = new String[1];
+		tmp[0] ="대구광장";
+		protocol.setData(tmp);
 		os.write(protocol.getPacket());
 		while (true) {
 			is.read(buf);
@@ -67,6 +70,11 @@ public class LoginClient {
 				case 2:
 					String result = protocol.getResult();
 					System.out.println(result);
+					break;
+				case 10:
+					result = protocol.getResult();
+					System.out.println(result);
+					break;
 				}
 			}
 		}

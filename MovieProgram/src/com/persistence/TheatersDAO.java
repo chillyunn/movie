@@ -85,8 +85,47 @@ public class TheatersDAO {
 		}
 		return result;
 	}
+	public static boolean EqualId(String id) {
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		String ThtId = null;
+		String SQL = "SELECT ThtId FROM Theaters WHERE ThtId = ?";
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				ThtId = rs.getString("ThtId");
+			else
+				ThtId = "";
 
-	public ArrayList<TheatersDTO> insert(String id, String address) {
+		} catch (SQLException sqle) {
+			System.out.println("equalId문에서 예외 발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+
+		}
+		if (id.equals(ThtId))
+			return true;
+		else
+			return false;
+	}
+	public static ArrayList<TheatersDTO> insert(String id, String address) {
 		ArrayList<TheatersDTO> dtos = new ArrayList<TheatersDTO>();
 
 		PreparedStatement pstmt = null;
@@ -118,19 +157,19 @@ public class TheatersDAO {
 		return dtos;
 	}
 
-	public ArrayList<TheatersDTO> update(String ThtId, String ThtAddress) {
-		ArrayList<TheatersDTO> dtos = new ArrayList<TheatersDTO>();
+	public static void update(String oldId,String newId, String ThtAddress) {
 		PreparedStatement pstmt = null;
 		Connection conn = null;
-		String SQL = "UPDATE Theaters SET ThtAddress=? WHERE ThtId=?";
+		String SQL = "UPDATE Theaters SET ThtId=?,ThtAddress=? WHERE ThtId=?";
 
 		try {
 			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(SQL);
-			pstmt.setString(1, ThtAddress);
-			pstmt.setString(2, ThtId);
+			pstmt.setString(1, newId);
+			pstmt.setString(2, ThtAddress);
+			pstmt.setString(3, oldId);
 			pstmt.executeUpdate();
-			System.out.println("UPDATE성공: " + ThtAddress);
+			System.out.println("UPDATE성공: " + newId);
 		} catch (SQLException sqle) {
 			System.out.println("UPDATE문에서 예외발생");
 			sqle.printStackTrace();
@@ -146,7 +185,34 @@ public class TheatersDAO {
 				throw new RuntimeException(e.getMessage());
 			}
 		}
-		return dtos;
+	}
+	public static void delete(String ThtId)
+	{
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		String SQL = "DELETE FROM Theaters WHERE ThtId=?";
+
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, ThtId);
+			pstmt.executeUpdate();
+			System.out.println("DELETE성공: " + ThtId);
+		} catch (SQLException sqle) {
+			System.out.println("DELETE문에서 예외발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
 	}
 
 }

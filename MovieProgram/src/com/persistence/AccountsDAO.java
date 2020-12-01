@@ -45,13 +45,13 @@ public class AccountsDAO {
 		return dtos;
 	}
 
-	public static ArrayList<AccountsDTO> insert(String AccId, String AccPw, String AccBank, String AccSerial,
+	public static boolean insert(String AccId, String AccPw, String AccBank, String AccSerial,
 			String AccBalance) {
-		ArrayList<AccountsDTO> dtos = new ArrayList<AccountsDTO>();
 
 		PreparedStatement pstmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
+		boolean flag;
 
 		String preQuery = "INSERT INTO Accounts(AccId, AccPw, AccBank, AccSerial, AccBalance) VALUES(?,?,?,?,?)";
 		try {
@@ -64,8 +64,10 @@ public class AccountsDAO {
 			pstmt.setString(5, AccBalance);
 			pstmt.executeUpdate();
 			System.out.println("INSERT성공: " + AccId);
+			flag=true;
 		} catch (SQLException sqle) {
 			System.out.println("INSERT문에서 예외 발생");
+			flag=false;
 			sqle.printStackTrace();
 		} finally {
 			try {
@@ -79,7 +81,7 @@ public class AccountsDAO {
 				throw new RuntimeException(e.getMessage());
 			}
 		}
-		return dtos;
+		return flag;
 
 	}
 
