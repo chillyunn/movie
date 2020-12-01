@@ -75,6 +75,7 @@ public class LoginClient {
 					result = protocol.getResult();
 					System.out.println(result);
 					break;
+					//
 				}
 			}
 		}
