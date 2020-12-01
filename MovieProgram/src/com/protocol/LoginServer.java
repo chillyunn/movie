@@ -196,7 +196,7 @@ public class LoginServer {
 				{
 				case 1:
 					protocol = new Protocol(Protocol.PT_THEATER, 2);
-					protocol.setData(TheatersViewer.bringTheaters(TheatersDAO.selectId()));
+					protocol.setData(TheatersDAO.selectId());
 					os.write(protocol.getPacket());
 					System.out.println("영화관 목록 전송 완료");
 					break;

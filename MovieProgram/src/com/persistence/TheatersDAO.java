@@ -48,21 +48,23 @@ public class TheatersDAO {
 		return dtos;
 	}
 
-	public static ArrayList<TheatersDTO> selectId() {
-		ArrayList<TheatersDTO> dtos = new ArrayList<TheatersDTO>();
+	public static String[] selectId() {
+		ArrayList<String> list = new ArrayList<String>();
 		Statement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
+		String[]result = new String[list.size()];
+		
 		String SQL = "SELECT ThtID FROM Theaters";
 		try {
 			conn = DBConnection.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
-				String ThtId = rs.getString("ThtId");
-				TheatersDTO dto = new TheatersDTO(ThtId);
-				dtos.add(dto);
+				list.add(rs.getString("ThtId"));
 			}
+			
+			result = list.toArray(result);
 		} catch (SQLException sqle) {
 			System.out.println("SELECT문에서 예외 발생");
 			sqle.printStackTrace();
@@ -81,7 +83,7 @@ public class TheatersDAO {
 				throw new RuntimeException(e.getMessage());
 			}
 		}
-		return dtos;
+		return result;
 	}
 
 	public ArrayList<TheatersDTO> insert(String id, String address) {
