@@ -129,7 +129,7 @@ public class Protocol {
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE];
 					break;
 				case 2:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_THEATER_ID];
+					packet = new byte[LEN_MAX];
 					break;
 				case 3:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_THEATER_ID

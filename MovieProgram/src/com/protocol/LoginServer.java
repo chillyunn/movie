@@ -123,7 +123,7 @@ public class LoginServer {
 					String phone = data[5];
 					System.out.println(id + "/" + password + "/" + name + "/" + age + "/" + gender + "/" + phone);
 					protocol = new Protocol(Protocol.PT_SIGN_UP, 2);
-					//id 중복확인
+					// id 중복확인
 					if (GuestsDAO.EqualId(id)) {
 						System.out.println("서버DB에 동일한 ID 존재");
 						protocol.setResult("1");
@@ -132,7 +132,7 @@ public class LoginServer {
 						protocol.setResult("0");
 						GuestsDAO.insert(id, password, name, age, gender, phone);
 					}
-		
+
 					os.write(protocol.getPacket());
 					System.out.println("회원가입 결과 전송 완료");
 					break;
@@ -144,11 +144,14 @@ public class LoginServer {
 					String pwd = data[2];
 
 					System.out.println(id + "/" + bankId + "/" + serial + "/" + pwd);
-					AccountsDAO.insert(id, pwd, bankId, serial, "20000");
-
 					protocol = new Protocol(Protocol.PT_SIGN_UP, 4);
+					if (AccountsDAO.insert(id, pwd, bankId, serial, "20000"))
+						protocol.setResult("0");
+					else
+						protocol.setResult("1");
+
 					os.write(protocol.getPacket());
-					System.out.println("계좌등록 완료 및 결과 전송 완료");
+					System.out.println("계좌등록 결과 전송 완료");
 					break;
 				}
 				break;
@@ -159,7 +162,7 @@ public class LoginServer {
 					String name = data[0];
 					String phone = data[1];
 					String result = GuestsDAO.findId(name, phone);
-				
+
 					if (!result.equals("")) { // id 찾은 결과 존재 -> data 값에 id 담아서 전송
 						System.out.println("일치하는 id 발견");
 						protocol = new Protocol(Protocol.PT_FIND, 2);
@@ -172,12 +175,12 @@ public class LoginServer {
 					os.write(protocol.getPacket());
 					System.out.println("id찾기 결과 전송 완료");
 					break;
-				case 4: //pw찾기 ->클라이언트 코드3(id,이름) 전송 -> 수신 후 코드4로 pw 전송
-					 data = protocol.getData();
-					 String id = data[0];
-					 name = data[1];
-					 result = GuestsDAO.findPw(id, name);
-				
+				case 4: // pw찾기 ->클라이언트 코드3(id,이름) 전송 -> 수신 후 코드4로 pw 전송
+					data = protocol.getData();
+					String id = data[0];
+					name = data[1];
+					result = GuestsDAO.findPw(id, name);
+
 					if (!result.equals("")) { // pw 찾은 결과 존재 -> data 값에 pw 담아아서 전송
 						System.out.println("일치하는 id 발견");
 						protocol = new Protocol(Protocol.PT_FIND, 5);
@@ -192,14 +195,77 @@ public class LoginServer {
 					break;
 				}
 			case Protocol.PT_THEATER:
-				switch(packetCode)
-				{
-				case 1:
+				switch (packetCode) {
+				case 1: // 영화관 목록 전송 요청 => code2로 영화관 목록 전송
 					protocol = new Protocol(Protocol.PT_THEATER, 2);
 					protocol.setData(TheatersDAO.selectId());
 					os.write(protocol.getPacket());
 					System.out.println("영화관 목록 전송 완료");
 					break;
+				case 3: // 영화관 추가 요청 => code4로 영화관 추가 응답 전송
+					System.out.println("클라이언트가 영화관 추가 요청을 보냈습니다");
+					String[] data = protocol.getData();
+					String id = data[0];
+					String address = data[1];
+					System.out.println(id + "/" + address);
+					protocol = new Protocol(Protocol.PT_THEATER, 4);
+					// id 중복확인
+					if (TheatersDAO.EqualId(id)) {
+						System.out.println("서버DB에 동일한 ID 존재");
+						protocol.setResult("1");
+					} else {
+						System.out.println("서버DB에 동일한 ID 없음");
+						protocol.setResult("0");
+						TheatersDAO.insert(id, address);
+					}
+
+					os.write(protocol.getPacket());
+					System.out.println("영화관 추가 결과 전송 완료");
+					break;
+				case 5: // 영화관 삭제 요청
+					System.out.println("클라이언트가 영화관 삭제 요청을 보냈습니다");
+					data = protocol.getData();
+					id = data[0];
+					protocol = new Protocol(Protocol.PT_THEATER, 6);
+					if (TheatersDAO.EqualId(id)) {
+						System.out.println("서버DB에 동일한 ID 존재"); // 삭제
+						TheatersDAO.delete(id);
+						protocol.setResult("1");
+					} else {
+						System.out.println("서버DB에 동일한 ID 없음"); // 삭제 실패
+						protocol.setResult("2");
+					}
+					os.write(protocol.getPacket());
+					System.out.println("영화관 삭제 결과 전송 완료");
+					break;
+				case 7: // 영화관 수정 요청
+					System.out.println("클라이언트가 영화관 수정 요청을 보냈습니다");
+					data = protocol.getData();
+					String oldId = data[0];
+					String newId = data[1];
+					String newAddress = data[2];
+					protocol = new Protocol(Protocol.PT_THEATER, 8);
+					if (TheatersDAO.EqualId(oldId)) {
+						System.out.println("서버DB에 동일한 ID 존재"); // 수정
+						TheatersDAO.update(oldId, newId, newAddress);
+						protocol.setResult("1");
+					} else {
+						System.out.println("서버DB에 동일한 ID 없음"); // 수정 실패
+						protocol.setResult("2");
+					}
+					os.write(protocol.getPacket());
+					System.out.println("영화관 수정 결과 전송 완료");
+					break;
+				case 9:
+					System.out.println("클라이언트가 영화관 상세정보 요청을 보냈습니다");
+					data = protocol.getData();
+					String thtId = data[0];
+					protocol = new Protocol(Protocol.PT_THEATER, 10);
+					protocol.setData(ScreensDAO.selectId(thtId));
+					os.write(protocol.getPacket());
+					System.out.println("상영관 목록 전송 완료");
+					break;
+
 				}
 				break;
 			}// end switch
