@@ -2,6 +2,8 @@ package com.protocol;
 
 import com.oracle.*;
 import com.persistence.*;
+import com.view.*;
+
 import java.net.*;
 import java.sql.*;
 import java.io.*;
@@ -109,7 +111,7 @@ public class LoginServer {
 				break;
 			case Protocol.PT_SIGN_UP:
 				switch (packetCode) {
-				case 1: // 회원가입 정보 수신 후 DB에 등록 -> code2 받고 계좌등록 gui
+				case 1: // code1 회원가입 정보 수신 후 id중복검사, 없을 시DB에 등록 -> code2에 data 성공=0,실패=1 보냄
 					System.out.println("클라이언트가 회원가입 정보를 보냈습니다");
 					String[] data = protocol.getData();
 					String id = data[0];
@@ -120,29 +122,21 @@ public class LoginServer {
 					String gender = data[4];
 					String phone = data[5];
 					System.out.println(id + "/" + password + "/" + name + "/" + age + "/" + gender + "/" + phone);
-					GuestsDAO.insert(id, password, name, age, gender, phone);
-
 					protocol = new Protocol(Protocol.PT_SIGN_UP, 2);
-					os.write(protocol.getPacket());
-					System.out.println("회원가입 완료 및 결과 전송 완료");
-					break;
-				case 3: // iD 중복확인 정보 수신 후 검증 -> code4 받고 끝
-					System.out.println("클라이언트가 중복확인을 위한 ID정보를 보냈습니다");
-					data = protocol.getData();
-					id = data[0];
-					System.out.println(id);
-					protocol = new Protocol(Protocol.PT_SIGN_UP, 4);
+					//id 중복확인
 					if (GuestsDAO.EqualId(id)) {
 						System.out.println("서버DB에 동일한 ID 존재");
-						protocol.setResult("0");
+						protocol.setResult("1");
 					} else {
 						System.out.println("서버DB에 동일한 ID 없음");
-						protocol.setResult("1");
+						protocol.setResult("0");
+						GuestsDAO.insert(id, password, name, age, gender, phone);
 					}
+		
 					os.write(protocol.getPacket());
-					System.out.println("중복확인 결과 전송 완료");
+					System.out.println("회원가입 결과 전송 완료");
 					break;
-				case 5: // 계좌등록 정보 수신 후 DB에 등록 -> code6 받고 종료 -> login gui
+				case 3: // code3 계좌정보 수신 후 계좌등록, 성공시 code4 보냄
 					data = protocol.getData();
 					id = tmp_data[0];
 					String bankId = data[0];
@@ -152,7 +146,7 @@ public class LoginServer {
 					System.out.println(id + "/" + bankId + "/" + serial + "/" + pwd);
 					AccountsDAO.insert(id, pwd, bankId, serial, "20000");
 
-					protocol = new Protocol(Protocol.PT_SIGN_UP, 6);
+					protocol = new Protocol(Protocol.PT_SIGN_UP, 4);
 					os.write(protocol.getPacket());
 					System.out.println("계좌등록 완료 및 결과 전송 완료");
 					break;
@@ -165,24 +159,48 @@ public class LoginServer {
 					String name = data[0];
 					String phone = data[1];
 					String result = GuestsDAO.findId(name, phone);
-					if (!result.equals("")) { // id 찾은 결과 존재
-						System.out.println(result);
+				
+					if (!result.equals("")) { // id 찾은 결과 존재 -> data 값에 id 담아서 전송
+						System.out.println("일치하는 id 발견");
 						protocol = new Protocol(Protocol.PT_FIND, 2);
-						// id담기
+						protocol.setResult(result);
 
-					} else { // id 찾은 결과 없음
+					} else { // id 찾은 결과 없음 -> data 값에 0 담아서 전송
 						System.out.println("일치하는 id 없음");
-						protocol = new Protocol(Protocol.PT_FIND, 2);
-						// id담기
-
+						protocol = new Protocol(Protocol.PT_FIND, 3);
 					}
 					os.write(protocol.getPacket());
-					System.out.println("id찾기 완료 및 결과 전송 완료");
+					System.out.println("id찾기 결과 전송 완료");
 					break;
-				case 2:
+				case 4: //pw찾기 ->클라이언트 코드3(id,이름) 전송 -> 수신 후 코드4로 pw 전송
+					 data = protocol.getData();
+					 String id = data[0];
+					 name = data[1];
+					 result = GuestsDAO.findPw(id, name);
+				
+					if (!result.equals("")) { // pw 찾은 결과 존재 -> data 값에 pw 담아아서 전송
+						System.out.println("일치하는 id 발견");
+						protocol = new Protocol(Protocol.PT_FIND, 5);
+						protocol.setResult(result);
 
+					} else { // pw 찾은 결과 없음 -> data 값에 0 담아서 전송
+						System.out.println("일치하는 id 없음");
+						protocol = new Protocol(Protocol.PT_FIND, 6);
+					}
+					os.write(protocol.getPacket());
+					System.out.println("id찾기 결과 전송 완료");
+					break;
 				}
-
+			case Protocol.PT_THEATER:
+				switch(packetCode)
+				{
+				case 1:
+					protocol = new Protocol(Protocol.PT_THEATER, 2);
+					protocol.setData(TheatersViewer.bringTheaters(TheatersDAO.selectId()));
+					os.write(protocol.getPacket());
+					System.out.println("영화관 목록 전송 완료");
+					break;
+				}
 				break;
 			}// end switch
 			if (program_stop)

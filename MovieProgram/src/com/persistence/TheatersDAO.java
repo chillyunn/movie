@@ -48,7 +48,7 @@ public class TheatersDAO {
 		return dtos;
 	}
 
-	public ArrayList<TheatersDTO> selectId() {
+	public static ArrayList<TheatersDTO> selectId() {
 		ArrayList<TheatersDTO> dtos = new ArrayList<TheatersDTO>();
 		Statement stmt = null;
 		Connection conn = null;

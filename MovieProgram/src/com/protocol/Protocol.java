@@ -331,13 +331,12 @@ public class Protocol {
 		return packet;
 	}
 
-	public void setData(String in) {
-		System.arraycopy(in.trim().getBytes(), 0, packet, LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE,
-				in.trim().getBytes().length);
-	}
+	public void setData(String[] in) {
+		String data = in[0] + ";";
+		for (int i = 1; i < in.length; i++) {
+			data += in[i] + ";";
+		}
 
-	public void setIdPwd(String id, String pwd) {
-		String data = id + ";" + pwd + ";";
 		System.arraycopy(data.trim().getBytes(), 0, packet, LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE,
 				data.trim().getBytes().length);
 	}

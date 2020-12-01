@@ -202,7 +202,6 @@ public class GuestsDAO {
 	}
 
 	public static boolean EqualId(String id) {
-		ArrayList<GuestsDTO> dtos = new ArrayList<GuestsDTO>();
 		PreparedStatement pstmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
@@ -212,7 +211,7 @@ public class GuestsDAO {
 			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, id);
-			rs = pstmt.executeQuery(SQL);
+			rs = pstmt.executeQuery();
 			if(rs.next())
 				GusId = rs.getString("GusId");
 			else
@@ -253,7 +252,7 @@ public class GuestsDAO {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, name);
 			pstmt.setString(1, phone);
-			rs = pstmt.executeQuery(SQL);
+			rs = pstmt.executeQuery();
 			if(rs.next())
 				GusId = rs.getString("GusId");
 			else
@@ -279,6 +278,44 @@ public class GuestsDAO {
 
 		}
 		return GusId;
+	}
+	public static String findPw(String id,String name) {
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		String GusPw = null;
+		String SQL = "SELECT GusPw FROM Guests WHERE GusId = ? and GusName = ?";
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, id);
+			pstmt.setString(1, name);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				GusPw = rs.getString("GusPw");
+			else
+				GusPw = "";
+
+		} catch (SQLException sqle) {
+			System.out.println("findlPw문에서 예외 발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+
+		}
+		return GusPw;
 	}
 
 	public ArrayList<GuestsDTO> update(String gusId, String pw, String gusName, String gusAge, String gusPhone) {

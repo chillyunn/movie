@@ -14,12 +14,15 @@ public class LoginClient {
 
 		Protocol protocol = new Protocol();
 		byte[] buf = protocol.getPacket();
-
+		
+		protocol = new Protocol(Protocol.PT_THEATER, 1);
+		os.write(protocol.getPacket());
 		while (true) {
 			is.read(buf);
 			int packetType = buf[0];
 			int packetCode = buf[1];
 			protocol.setPacket(packetType, packetCode, buf);
+			
 			if (packetType == Protocol.PT_EXIT) {
 				System.out.println("클라이언트 종료");
 				break;
@@ -38,7 +41,7 @@ public class LoginClient {
 					// 로그인 정보 생성 및 패킷 전송
 
 					protocol = new Protocol(Protocol.PT_LOGIN, 1);
-					protocol.setIdPwd(id,pwd);
+					protocol.setResult(id+pwd);
 					System.out.println("로그인 정보 전송");
 					os.write(protocol.getPacket());
 					break;
@@ -57,8 +60,14 @@ public class LoginClient {
 //				protocol = new Protocol(Protocol.PT_EXIT, 0);
 //				System.out.println("종료 패킷 전송");
 //				os.write(protocol.getPacket());
-//				break;
-
+		break;
+			case Protocol.PT_THEATER:
+				switch(packetCode)
+				{
+				case 2:
+					String result = protocol.getResult();
+					System.out.println(result);
+				}
 			}
 		}
 		os.close();
