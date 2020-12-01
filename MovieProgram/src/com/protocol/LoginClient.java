@@ -65,9 +65,12 @@ public class LoginClient {
 				switch(packetCode)
 				{
 				case 2:
-					String result = protocol.getResult();
-					System.out.println(result);
-				}
+					String[] result = protocol.getData();
+					for(String a:result)
+					{
+					System.out.println(a);
+					}
+					}
 			}
 		}
 		os.close();
