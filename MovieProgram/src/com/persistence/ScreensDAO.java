@@ -102,7 +102,7 @@ public class ScreensDAO {
 		String ScrId = null;
 		int screenCount = 0;
 		String[] result = new String[list.size()];
-
+//asdfasd
 		String SQL1 ="SELECT thtAddress FROM Theaters WHERE ThtId = ?";
 		String SQL = "SELECT ScrId FROM Screens WHERE ThtId = ?";
 		String SQL2 = "SELECT count(*) FROM seats where scrid = ? and thtId = ?";
