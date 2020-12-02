@@ -363,17 +363,26 @@ public class ServerThread extends Thread {
 			case Protocol.PT_MOVIE:
 				switch(packetCode)
 				{
-				case 1: //영화 정보 요청
+				case 1: //영화 목록정보 요청
 					System.out.println("클라이언트가 영화정보 요청을 보냈습니다");
 					protocol = new Protocol(Protocol.PT_MOVIE, 2);
 					protocol.setData(MoviesDAO.selectTitle());
 					os.write(protocol.getPacket());
-					System.out.println("영화관 목록 전송 완료");
+					System.out.println("영화 목록 전송 완료");
 					break;
-				case 3: //영화 추가 요청
-					System.out.println("클라이언트가 영화관추가 요청을 보냈습니다");
+				case 3: //영화 상세 정보 요청
+					System.out.println("클라이언트가 영화 상세정보 요청을 보냈습니다");
 					String[] data = protocol.getData();
 					String movTitle = data[0];
+					protocol = new Protocol(Protocol.PT_MOVIE, 4);
+					protocol.setData(MoviesDAO.selectMov(movTitle));
+					os.write(protocol.getPacket());
+					System.out.println("영화 상세 정보전송 완료");
+					break;
+				case 5: //영화 추가 요청
+					System.out.println("클라이언트가 영화관추가 요청을 보냈습니다");
+					data = protocol.getData();
+					 movTitle = data[0];
 					String movGenre = data[1];
 					String movOpendate = data[2];
 					String movActor = data[3];
@@ -398,7 +407,7 @@ public class ServerThread extends Thread {
 					os.write(protocol.getPacket());
 					System.out.println("영화 추가 결과 전송 완료");
 					break;
-				case 5: // 영화 삭제 요청
+				case 7: // 영화 삭제 요청
 					System.out.println("클라이언트가 상영관 삭제 요청을 보냈습니다");
 					data = protocol.getData();
 					movTitle = data[0];
@@ -414,7 +423,7 @@ public class ServerThread extends Thread {
 					os.write(protocol.getPacket());
 					System.out.println("영화관 삭제 결과 전송 완료");
 					break;
-				case 7: // 상영 시간표 정보 요청
+				case 9: // 상영 시간표 정보 요청
 				}
 				break;
 			}// end switch
