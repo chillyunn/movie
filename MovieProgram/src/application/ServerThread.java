@@ -21,7 +21,7 @@ import com.setting.Protocol;
 
 /**
  * 개별 클라이언트와 메세지를 주고 받는 스레드 Socket: 멤버변수, 생성자를 통해서 TestServer에서 할당 받는다. 1.
- * extends Thread 2. run() 클라이언트의 메세지를 주고 받는 비즈니스(Socket)
+ * extends Thread 2. run() 클라이언트의 메세지를 주고 받는 비즈니스(Socket).
  * 
  * @author 관리자
  *
@@ -144,6 +144,7 @@ public class ServerThread extends Thread {
 					System.out.println("클라이언트가 회원가입 정보를 보냈습니다");
 					String[] data = protocol.getData();
 					String id = data[0];
+					tmp_data = new String[1];
 					tmp_data[0] = id;
 					String password = data[1];
 					String name = data[2];
@@ -190,12 +191,14 @@ public class ServerThread extends Thread {
 					String[] data = protocol.getData();
 					String name = data[0];
 					String phone = data[1];
-					String result = GuestsDAO.findId(name, phone);
+					String[] result = new String[1]; 
 
-					if (!result.equals("")) { // id 찾은 결과 존재 -> data 값에 id 담아서 전송
+					result[0] = GuestsDAO.findId(name, phone);
+					
+					if (!result[0].equals("")) { // id 찾은 결과 존재 -> data 값에 id 담아서 전송
 						System.out.println("일치하는 id 발견");
 						protocol = new Protocol(Protocol.PT_FIND, 2);
-						protocol.setResult(result);
+						protocol.setData(result);
 
 					} else { // id 찾은 결과 없음 -> data 값에 0 담아서 전송
 						System.out.println("일치하는 id 없음");
@@ -206,17 +209,18 @@ public class ServerThread extends Thread {
 					break;
 				case 4: // pw찾기 ->클라이언트 코드3(id,이름) 전송 -> 수신 후 코드4로 pw 전송
 					data = protocol.getData();
+					result = new String[1];
 					String id = data[0];
 					name = data[1];
-					result = GuestsDAO.findPw(id, name);
+					result[0] = GuestsDAO.findPw(id, name);
 
-					if (!result.equals("")) { // pw 찾은 결과 존재 -> data 값에 pw 담아아서 전송
-						System.out.println("일치하는 id 발견");
+					if (!result[0].equals("")) { // pw 찾은 결과 존재 -> data 값에 pw 담아아서 전송
+						System.out.println("일치하는 pw 발견");
 						protocol = new Protocol(Protocol.PT_FIND, 5);
-						protocol.setResult(result);
+						protocol.setData(result);
 
 					} else { // pw 찾은 결과 없음 -> data 값에 0 담아서 전송
-						System.out.println("일치하는 id 없음");
+						System.out.println("일치하는 pw 없음");
 						protocol = new Protocol(Protocol.PT_FIND, 6);
 					}
 					os.write(protocol.getPacket());
