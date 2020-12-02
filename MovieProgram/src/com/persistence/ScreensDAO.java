@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import com.oracle.DBConnection;
+import com.setting.ConnectSetting;
 
 public class ScreensDAO {
 
@@ -19,7 +19,7 @@ public class ScreensDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM Screens";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -59,7 +59,7 @@ public class ScreensDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT ScrId, ThtId FROM Screens";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -104,7 +104,7 @@ public class ScreensDAO {
 		String SQL = "SELECT ScrId FROM Screens WHERE ThtId = ?";
 		String SQL2 = "SELECT count(*) FROM seats where scrid = ? and thtId = ?";
 		try {
-			conn = DBConnection.getConnection(); //SQL1 구문 실행
+			conn = ConnectSetting.getConnection(); //SQL1 구문 실행
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, thtId);
 			rs = pstmt.executeQuery();
@@ -164,7 +164,7 @@ public class ScreensDAO {
 
 		String preQuery = "INSERT INTO Screens(ScrId, ThtId, ScrType, ScrPremium) VALUES(?,?,?,?)";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, ScrId);
 			pstmt.setString(2, ThtId);

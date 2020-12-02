@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import com.oracle.DBConnection;
+import com.setting.ConnectSetting;
 
 public class MoviesDAO {
 	public ArrayList<MoviesDTO> selectAll() {
@@ -18,7 +18,7 @@ public class MoviesDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM Movies";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -65,7 +65,7 @@ public class MoviesDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT MovTitle FROM Movies";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -104,7 +104,7 @@ public class MoviesDAO {
 		ResultSet rs = null;
 		String preQuery = "INSERT INTO Movies(MovTitle,MovDirector,MovActor,MovGenre,MovStory,MovOpenDate,MovView,MovRuntime,MovRating,MovTrailer) VALUES(?,?,?,?,?,?,?,?,?,?)";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, MovTitle);
 			pstmt.setString(2, MovDirector);
@@ -148,7 +148,7 @@ public class MoviesDAO {
 
 		ResultSet rs = null;
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			conn.setAutoCommit(false);
 
 			pstmt = conn.prepareStatement(SQL2);

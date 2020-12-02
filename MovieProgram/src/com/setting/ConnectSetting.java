@@ -24,7 +24,7 @@ public class ConnectSetting {
 		try {
 			String user = "MOVIE";
 			String pw = "123";
-			String url = "jdbc:oracle:thin:@" + DBIP + ":" + DBPort + ":xe";
+			String url = "jdbc:oracle:thin:@localhost" + ":" + DBPort + ":xe";
 
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection(url, user, pw);

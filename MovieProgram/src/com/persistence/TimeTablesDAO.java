@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import com.oracle.DBConnection;
+import com.setting.ConnectSetting;
 
 public class TimeTablesDAO {
 	public ArrayList<TimeTablesDTO> selectAll() {
@@ -18,7 +18,7 @@ public class TimeTablesDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM TimeTables";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -61,7 +61,7 @@ public class TimeTablesDAO {
 
 		String preQuery = "INSERT INTO TimeTables(TtId, MovTitle, ThtId, ScrId, TtTime) VALUES(?,?,?,?,?)";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, TtId);
 			pstmt.setString(2, MovTitle);

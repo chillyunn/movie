@@ -3,7 +3,6 @@ package application;
 import java.io.IOException;
 import java.net.Socket;
 
-import com.oracle.DBConnection;
 import com.setting.*;
 
 import javafx.application.Application;

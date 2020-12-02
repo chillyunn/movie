@@ -2,7 +2,7 @@ package com.persistence;
 
 import java.sql.*;
 import java.util.ArrayList;
-import com.oracle.DBConnection;
+import com.setting.ConnectSetting;
 
 public class AccountsDAO {
 	public static ArrayList<AccountsDTO> selectAll() {
@@ -12,7 +12,7 @@ public class AccountsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM ACCOUNTS";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -55,7 +55,7 @@ public class AccountsDAO {
 
 		String preQuery = "INSERT INTO Accounts(AccId, AccPw, AccBank, AccSerial, AccBalance) VALUES(?,?,?,?,?)";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, AccId);
 			pstmt.setString(2, AccPw);
@@ -96,7 +96,7 @@ public class AccountsDAO {
 		ResultSet rs = null;
 
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			conn.setAutoCommit(false);
 
 			pstmt = conn.prepareStatement(SQL2);

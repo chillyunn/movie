@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import com.oracle.DBConnection;
+import com.setting.ConnectSetting;
 
 public class AdminsDAO {
 	public static ArrayList<AdminsDTO> selectAll() {
@@ -17,7 +17,7 @@ public class AdminsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM ADMINS";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -57,7 +57,7 @@ public class AdminsDAO {
 
 		String preQuery = "INSERT INTO Admins(AdmId,AdmPw,ThtId) VALUES(?,?,?)";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, AdmId);
 			pstmt.setString(2, AdmPw);
@@ -89,7 +89,7 @@ public class AdminsDAO {
 		Connection conn = null;
 		String SQL = "UPDATE Admins SET ThtId=?, AdmPw=? WHERE AdmId=?";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 
 			pstmt.setString(1, thtId);
