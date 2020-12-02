@@ -251,7 +251,7 @@ public class GuestsDAO {
 			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, name);
-			pstmt.setString(1, phone);
+			pstmt.setString(2, phone);
 			rs = pstmt.executeQuery();
 			if(rs.next())
 				GusId = rs.getString("GusId");
@@ -289,7 +289,7 @@ public class GuestsDAO {
 			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, id);
-			pstmt.setString(1, name);
+			pstmt.setString(2, name);
 			rs = pstmt.executeQuery();
 			if(rs.next())
 				GusPw = rs.getString("GusPw");

@@ -15,7 +15,7 @@ public class LoginServer {
 		Statement stmt = null;
 		ResultSet rs = null;
 		Protocol protocol = null;
-		String[] tmp_data = null;
+		String[] tmp_data = new String[1];
 		System.out.println("클라이언트 접속 대기중...");
 
 		Socket socket = sSocket.accept();
@@ -69,11 +69,11 @@ public class LoginServer {
 							if (password.equals(DBpw)) {
 								// 로그인 성공
 								protocol = new Protocol(Protocol.PT_LOGIN, 2);
-								protocol.setResult("0");
+								protocol.setResult("1");
 								System.out.println("로그인 성공");
 							} else { // 암호 틀림
 								protocol = new Protocol(Protocol.PT_LOGIN, 2);
-								protocol.setResult("1");
+								protocol.setResult("3");
 								System.out.println("암호 틀림");
 							}
 
@@ -87,17 +87,17 @@ public class LoginServer {
 								if (password.equals(DBpw)) {
 									// 로그인 성공
 									protocol = new Protocol(Protocol.PT_LOGIN, 2);
-									protocol.setResult("0");
+									protocol.setResult("2");
 									System.out.println("로그인 성공");
 								} else { // 암호 틀림
 									protocol = new Protocol(Protocol.PT_LOGIN, 2);
-									protocol.setResult("1");
+									protocol.setResult("3");
 									System.out.println("암호 틀림");
 								}
 
 							} else { // 아이디 존재 안함
 								protocol = new Protocol(Protocol.PT_LOGIN, 2);
-								protocol.setResult("2");
+								protocol.setResult("4");
 								System.out.println("아이디 존재안함");
 							}
 						}
@@ -115,6 +115,7 @@ public class LoginServer {
 					System.out.println("클라이언트가 회원가입 정보를 보냈습니다");
 					String[] data = protocol.getData();
 					String id = data[0];
+					tmp_data = new String[1];
 					tmp_data[0] = id;
 					String password = data[1];
 					String name = data[2];
@@ -137,6 +138,7 @@ public class LoginServer {
 					System.out.println("회원가입 결과 전송 완료");
 					break;
 				case 3: // code3 계좌정보 수신 후 계좌등록, 성공시 code4 보냄
+					data = new String[3];
 					data = protocol.getData();
 					id = tmp_data[0];
 					String bankId = data[0];
@@ -158,16 +160,18 @@ public class LoginServer {
 			case Protocol.PT_FIND:
 				switch (packetCode) {
 				case 1: // 클라이언트가 id찾기 확인버튼->코드1(고객이름,전화번호) 전송/서버가 수신 후 코드2로 id 전송
+					System.out.println("id찾기 ");
 					String[] data = protocol.getData();
 					String name = data[0];
 					String phone = data[1];
-					String result = GuestsDAO.findId(name, phone);
+					String[] result = new String[1];
+					result[0] = GuestsDAO.findId(name, phone);
 
-					if (!result.equals("")) { // id 찾은 결과 존재 -> data 값에 id 담아서 전송
+					if (!result[0].equals("")) { // id 찾은 결과 존재 -> data 값에 id 담아서 전송
 						System.out.println("일치하는 id 발견");
 						protocol = new Protocol(Protocol.PT_FIND, 2);
-						protocol.setResult(result);
-
+						protocol.setData(result);
+							
 					} else { // id 찾은 결과 없음 -> data 값에 0 담아서 전송
 						System.out.println("일치하는 id 없음");
 						protocol = new Protocol(Protocol.PT_FIND, 3);
@@ -176,24 +180,27 @@ public class LoginServer {
 					System.out.println("id찾기 결과 전송 완료");
 					break;
 				case 4: // pw찾기 ->클라이언트 코드3(id,이름) 전송 -> 수신 후 코드4로 pw 전송
+					result = new String[1];
+					System.out.println("pw찾기");
 					data = protocol.getData();
 					String id = data[0];
 					name = data[1];
-					result = GuestsDAO.findPw(id, name);
+					result[0] = GuestsDAO.findPw(id, name);
 
-					if (!result.equals("")) { // pw 찾은 결과 존재 -> data 값에 pw 담아아서 전송
-						System.out.println("일치하는 id 발견");
+					if (!result[0].equals("")) { // pw 찾은 결과 존재 -> data 값에 pw 담아아서 전송
+						System.out.println("일치하는 pw 발견");
 						protocol = new Protocol(Protocol.PT_FIND, 5);
-						protocol.setResult(result);
+						protocol.setData(result);
 
 					} else { // pw 찾은 결과 없음 -> data 값에 0 담아서 전송
-						System.out.println("일치하는 id 없음");
+						System.out.println("일치하는 pw 없음");
 						protocol = new Protocol(Protocol.PT_FIND, 6);
 					}
 					os.write(protocol.getPacket());
 					System.out.println("id찾기 결과 전송 완료");
 					break;
 				}
+				break;
 			case Protocol.PT_THEATER:
 				switch (packetCode) {
 				case 1: // 영화관 목록 전송 요청 => code2로 영화관 목록 전송
