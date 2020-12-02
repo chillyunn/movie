@@ -29,8 +29,7 @@ import com.oracle.*;
 public class ServerThread extends Thread {
 	// 멤버변수로 선언
 	private Socket socket;
-	private BufferedReader br = null;
-	private PrintWriter pw = null;
+
 	private String userIP;
 
 	ServerThread(Socket s) {
