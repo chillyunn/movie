@@ -85,41 +85,35 @@ public class Protocol {
 							+ LEN_DATA_DETAIL];
 					break;
 				case 2:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
-					break;
-				case 3:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_ID];
 					break;
+				case 3:
+					packet = new byte[LEN_MAX];
+					break;
 				case 4:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
-					break;
-				case 5:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_ACCOUNT];
-					break;
-				case 6:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
+					packet = new byte[LEN_MAX];
 					break;
 				}
 				break;
 			case PT_FIND:
 				switch (protocolCode) {
 				case 1:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE+ LEN_DATA_FIND];
 					break;
 				case 2:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_FIND];
 					break;
 				case 3:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_ID];
+					packet = new byte[LEN_MAX];
 					break;
 				case 4:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE+ LEN_MAX];
 					break;
 				case 5:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_FIND];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_MAX];
 					break;
 				case 6:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_PWD];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_MAX];
 					break;
 				}
 				break;
