@@ -64,12 +64,12 @@ public class MoviesDAO {
 		ResultSet rs = null;
 		String[]result = new String[list.size()];
 		
-		String SQL = "SELECT * FROM Movies where movetitle = ?";
+		String SQL = "SELECT * FROM Movies where movtitle = ?";
 		try {
 			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, title);
-			rs = pstmt.executeQuery(SQL);
+			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				list.add(rs.getString("movTitle"));
 				list.add(rs.getString("MovDirector"));

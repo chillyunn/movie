@@ -17,7 +17,7 @@ public class Protocol {
 
 	public static final int LEN_PROTOCOL_TYPE = 1; // 프로토콜 타입 길이
 	public static final int LEN_PROTOCOL_CODE = 1; // 프로토콜 타입 길이
-	public static final int LEN_MAX = 1000; // 패킷이 가질수 있는 최대 길이
+	public static final int LEN_MAX = 9000; // 패킷이 가질수 있는 최대 길이
 
 	public static final int LEN_DATA_DATE = 13;
 	public static final int LEN_DATA_ID = 21;
@@ -173,19 +173,19 @@ public class Protocol {
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_MOVIE_TITLE];
 					break;
 				case 2:
-					packet = new byte[LEN_MAX];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE +LEN_MAX];
 					break;
 				case 3:
-					packet = new byte[LEN_MAX];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE +LEN_MAX];
 					break;
 				case 4:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE +LEN_MAX];
 					break;
 				case 5:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_MOVIE_TITLE];
 					break;
 				case 6:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE +LEN_MAX];
 					break;
 				case 7:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_THEATER_ID
@@ -200,7 +200,7 @@ public class Protocol {
 							+ LEN_DATA_THEATER_SCREEN + LEN_DATA_MOVIE_TITLE + LEN_DATA_DATE];
 					break;
 				case 10:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE +LEN_MAX];
 					break;
 				case 11:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_THEATER_ID
@@ -214,7 +214,7 @@ public class Protocol {
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_MOVIE_TIMETABLE_ID];
 					break;
 				case 14:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE +LEN_MAX];
 					break;
 				}
 				break;
@@ -315,7 +315,7 @@ public class Protocol {
 				packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE];
 				break;
 			case PT_UNDEFINED:
-				packet = new byte[LEN_MAX];
+				packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE+LEN_MAX];
 				break;
 			} // end switch
 		} // end if

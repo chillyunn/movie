@@ -51,10 +51,50 @@ public class TimeTablesDAO {
 		}
 		return dtos;
 	}
+	public static String[] selectTimetable(String thtId) {
+		ArrayList<String> list = new ArrayList<String>();
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		String[]result = new String[list.size()];
+		
+		String SQL = "SELECT * FROM Movies where thtId = ?";
+		try {
+			conn = ConnectSetting.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, thtId);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(rs.getString("TtId"));
+				list.add(rs.getString("MovTitle"));
+				list.add(rs.getString("ThtId"));
+				list.add(rs.getString("ScrId"));
+				list.add(rs.getString("TtTime"));
+			}
+			result = list.toArray(result);
+		} catch (SQLException sqle) {
+			System.out.println("SELECT문에서 예외 발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		return result;
+	}
 
-	public ArrayList<TimeTablesDTO> insert(String TtId, String MovTitle, String ThtId, String ScrId, String TtTime) {
-		ArrayList<TimeTablesDTO> dtos = new ArrayList<TimeTablesDTO>();
-
+	public static void insert(String TtId, String MovTitle, String ThtId, String ScrId, String TtTime) {
+		
 		PreparedStatement pstmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
@@ -78,6 +118,9 @@ public class TimeTablesDAO {
 				if (rs != null) {
 					rs.close();
 				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
 				if (conn != null) {
 					conn.close();
 				}
@@ -86,6 +129,79 @@ public class TimeTablesDAO {
 			}
 		}
 
-		return dtos;
+	}
+	public static boolean EqualTime(String thtId,String scrId, String movtitle, String ttTime) {
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		String result = null;
+		String SQL = "SELECT thtId FROM timetables WHERE thtId = ? and scrId =? and movtitle =? and ttTime = ?";
+		try {
+			conn = ConnectSetting.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, thtId);
+			pstmt.setString(1, scrId);
+			pstmt.setString(1, movtitle);
+			pstmt.setString(1, ttTime);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				result = rs.getString("thtId");
+			else
+				result = "";
+
+		} catch (SQLException sqle) {
+			System.out.println("equalId문에서 예외 발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		if (thtId.equals(result))
+			return true;
+		else
+			return false;
+	}
+	public static void delete(String thtId,String scrId, String movtitle, String ttTime)
+	{
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		String SQL = "DELETE FROM timetables WHERE thtId = ? and scrId =? and movtitle =? and ttTime = ?";
+
+		try {
+			conn = ConnectSetting.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, thtId);
+			pstmt.setString(1, scrId);
+			pstmt.setString(1, movtitle);
+			pstmt.setString(1, ttTime);
+			pstmt.executeUpdate();
+			System.out.println("DELETE성공 ");
+		} catch (SQLException sqle) {
+			System.out.println("DELETE문에서 예외발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
 	}
 }

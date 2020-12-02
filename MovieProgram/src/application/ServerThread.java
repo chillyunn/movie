@@ -24,10 +24,10 @@ import com.setting.Protocol;
  *
  */
 public class ServerThread extends Thread {
-	final int LOWER_A=65;
-	final int MAX_SEAT_IN_LINE=10;
-	final String FALSE="0";
-	final String TRUE="1";
+	final int LOWER_A = 65;
+	final int MAX_SEAT_IN_LINE = 10;
+	final String FALSE = "0";
+	final String TRUE = "1";
 	// 멤버변수로 선언
 	private Socket socket;
 
@@ -191,10 +191,10 @@ public class ServerThread extends Thread {
 					String[] data = protocol.getData();
 					String name = data[0];
 					String phone = data[1];
-					String[] result = new String[1]; 
+					String[] result = new String[1];
 
 					result[0] = GuestsDAO.findId(name, phone);
-					
+
 					if (!result[0].equals("")) { // id 찾은 결과 존재 -> data 값에 id 담아서 전송
 						System.out.println("일치하는 id 발견");
 						protocol = new Protocol(Protocol.PT_FIND, 2);
@@ -317,13 +317,13 @@ public class ServerThread extends Thread {
 						protocol.setResult(TRUE);
 						ScreensDAO.insert(scrId, thtId, scrType, scrPremium);
 						char temp = 0;
-						if (seatNum < MAX_SEAT_IN_LINE) { //좌석수가 10미만이면 a1~a10까지 좌석생성
+						if (seatNum < MAX_SEAT_IN_LINE) { // 좌석수가 10미만이면 a1~a10까지 좌석생성
 							temp = (char) LOWER_A;
 							for (int j = 0; j < seatNum % MAX_SEAT_IN_LINE; j++) {
 								String tem = Character.toString(temp) + (j + 1);
 								SeatsDAO.insert(tem, thtId, scrId);
 							}
-						} else if(seatNum>=MAX_SEAT_IN_LINE){ //좌석수가 10이상이면 좌석수/10으로 알파벳구분하여 알파벳1~알파벳10까지 생성
+						} else if (seatNum >= MAX_SEAT_IN_LINE) { // 좌석수가 10이상이면 좌석수/10으로 알파벳구분하여 알파벳1~알파벳10까지 생성
 							for (int a = LOWER_A, i = 0; i < seatNum / MAX_SEAT_IN_LINE; i++) {
 
 								for (int j = 1; j < MAX_SEAT_IN_LINE; j++) {
@@ -332,7 +332,7 @@ public class ServerThread extends Thread {
 									SeatsDAO.insert(tem, thtId, scrId);
 								}
 								a++;
-							}//10으로 나눈후 남은 수만큼의 좌석 생성 ex)57-> 위에서 50자리 생성후 7자리 생성
+							} // 10으로 나눈후 남은 수만큼의 좌석 생성 ex)57-> 위에서 50자리 생성후 7자리 생성
 							for (int j = 1; j < seatNum % MAX_SEAT_IN_LINE; j++) {
 								String tem = Character.toString(temp) + j;
 								SeatsDAO.insert(tem, thtId, scrId);
@@ -342,7 +342,7 @@ public class ServerThread extends Thread {
 					os.write(protocol.getPacket());
 					System.out.println("영화관 추가 결과 전송 완료");
 					break;
-				case 13: //상영관 삭제 요청
+				case 13: // 상영관 삭제 요청
 					System.out.println("클라이언트가 상영관 삭제 요청을 보냈습니다");
 					data = protocol.getData();
 					scrId = data[0];
@@ -361,16 +361,16 @@ public class ServerThread extends Thread {
 				}
 				break;
 			case Protocol.PT_MOVIE:
-				switch(packetCode)
-				{
-				case 1: //영화 목록정보 요청
+				String ttTime, scrId, ttId;
+				switch (packetCode) {
+				case 1: // 영화 목록정보 요청
 					System.out.println("클라이언트가 영화정보 요청을 보냈습니다");
 					protocol = new Protocol(Protocol.PT_MOVIE, 2);
 					protocol.setData(MoviesDAO.selectTitle());
 					os.write(protocol.getPacket());
 					System.out.println("영화 목록 전송 완료");
 					break;
-				case 3: //영화 상세 정보 요청
+				case 3: // 영화 상세 정보 요청
 					System.out.println("클라이언트가 영화 상세정보 요청을 보냈습니다");
 					String[] data = protocol.getData();
 					String movTitle = data[0];
@@ -379,10 +379,10 @@ public class ServerThread extends Thread {
 					os.write(protocol.getPacket());
 					System.out.println("영화 상세 정보전송 완료");
 					break;
-				case 5: //영화 추가 요청
+				case 5: // 영화 추가 요청
 					System.out.println("클라이언트가 영화관추가 요청을 보냈습니다");
 					data = protocol.getData();
-					 movTitle = data[0];
+					movTitle = data[0];
 					String movGenre = data[1];
 					String movOpendate = data[2];
 					String movActor = data[3];
@@ -392,8 +392,8 @@ public class ServerThread extends Thread {
 					String movStory = data[7];
 					String movRating = data[8];
 					String movTrailer = data[9];
-					
-					protocol = new Protocol(Protocol.PT_MOVIE, 4);
+
+					protocol = new Protocol(Protocol.PT_MOVIE, 6);
 					// title 중복확인
 					if (MoviesDAO.EqualTitle(movTitle)) {
 						System.out.println("서버DB에 동일한 Title 존재");
@@ -401,7 +401,8 @@ public class ServerThread extends Thread {
 					} else {
 						System.out.println("서버DB에 동일한 Title 없음");
 						protocol.setResult("0");
-						MoviesDAO.insert(movTitle, movDirector,movActor,movGenre,movStory,movOpendate,movView,movRuntime,movRating,movTrailer);
+						MoviesDAO.insert(movTitle, movDirector, movActor, movGenre, movStory, movOpendate, movView,
+								movRuntime, movRating, movTrailer);
 					}
 
 					os.write(protocol.getPacket());
@@ -411,7 +412,7 @@ public class ServerThread extends Thread {
 					System.out.println("클라이언트가 상영관 삭제 요청을 보냈습니다");
 					data = protocol.getData();
 					movTitle = data[0];
-					protocol = new Protocol(Protocol.PT_THEATER, 6);
+					protocol = new Protocol(Protocol.PT_THEATER, 8);
 					if (MoviesDAO.EqualTitle(movTitle)) {
 						System.out.println("서버DB에 동일한 ID 존재"); // 삭제
 						MoviesDAO.delete(movTitle);
@@ -423,10 +424,66 @@ public class ServerThread extends Thread {
 					os.write(protocol.getPacket());
 					System.out.println("영화관 삭제 결과 전송 완료");
 					break;
-				case 9: // 상영 시간표 정보 요청
+				case 9: // 영화관별 상영 시간표 정보 요청
+					System.out.println("클라이언트가 상영시간표 정보 요청을 보냈습니다");
+					data = protocol.getData();
+					String thtId = data[0];
+					String[] tmp = new String[5];
+					String[] result = TimeTablesDAO.selectTimetable(thtId);
+					for (int i = 0; i < result.length; i += 5) {
+						for (int j = 0; j < 5; j++) {
+							tmp[j] = result[i + j];
+						}
+
+						protocol.setData(tmp);
+						os.write(protocol.getPacket());
+					}
+					System.out.println("영화관별 상영 시간표 요청 결과 전송 완료");
+					break;
+				case 10: // 상영시간표 등록 요청
+					System.out.println("클라이언트가 상영시간표 등록 요청을 보냈습니다");
+					data = protocol.getData();
+					ttId = data[0];
+					thtId = data[1];
+					scrId = data[2];
+					movTitle = data[3];
+					ttTime = data[4];
+					protocol = new Protocol(Protocol.PT_MOVIE, 11);
+					if (TimeTablesDAO.EqualTime(thtId, scrId, movTitle, ttTime)) {
+						System.out.println("서버DB에 동일한 Title 존재");
+						protocol.setResult("1");
+					} else {
+						System.out.println("서버DB에 동일한 Title 없음");
+						protocol.setResult("0");
+						TimeTablesDAO.insert(ttId, movTitle, thtId, scrId, ttTime);
+					}
+					os.write(protocol.getPacket());
+					System.out.println("상영시간표 등록 결과 전송 완료");
+					break;
+				case 11: // 상영시간표 삭제 요청
+					System.out.println("클라이언트가 상영시간표 삭제 요청을 보냈습니다");
+					data = protocol.getData();
+					ttId = data[0];
+					thtId = data[1];
+					scrId = data[2];
+					movTitle = data[3];
+					ttTime = data[4];
+					protocol = new Protocol(Protocol.PT_THEATER, 12);
+					if (TimeTablesDAO.EqualTime(thtId, scrId, movTitle, ttTime)) {
+						System.out.println("서버DB에 동일한 ID 존재"); // 삭제
+						TimeTablesDAO.delete(thtId, scrId, movTitle, ttTime);
+						protocol.setResult("1");
+					} else {
+						System.out.println("서버DB에 동일한 ID 없음"); // 삭제 실패
+						protocol.setResult("2");
+					}
+					os.write(protocol.getPacket());
+					System.out.println("영화관 삭제 결과 전송 완료");
+					break;
 				}
+
 				break;
-			}// end switch
+			} // end switch
 			if (program_stop) {
 				break;
 			}
