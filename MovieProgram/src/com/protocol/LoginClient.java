@@ -67,44 +67,27 @@ public class LoginClient {
 			case Protocol.PT_THEATER:
 				switch(packetCode)
 				{
-<<<<<<< HEAD
 				case 2:
 					String[] result = protocol.getData();
 					for(String a:result)
 					{
 						System.out.println(a);
 					}
-=======
-				case 2:
-					String[] result = protocol.getData();
-						for(String a:result)
-					{
-					System.out.println(a);
-					}
-
->>>>>>> branch 'master' of https://github.com/chillyunn/movie.git
 					
 					break;
 				case 10:
 					result = protocol.getData();
 					for(String a:result)
-<<<<<<< HEAD
 					{
 						System.out.println(a);
 					}
-=======
-				{
-				System.out.println(a);
-				}
->>>>>>> branch 'master' of https://github.com/chillyunn/movie.git
 					break;
 					//
 				}
-
 			}
+		}
 		os.close();
 		is.close();
 		socket.close();
-		}	
 	}
 }
