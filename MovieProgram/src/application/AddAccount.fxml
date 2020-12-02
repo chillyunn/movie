@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane fx:id="AddAccount" prefHeight="400.0"
+	prefWidth="600.0" xmlns="http://javafx.com/javafx"
+	xmlns:fx="http://javafx.com/fxml"
+	fx:controller="application.AddAccountController">
+	<top>
+		<Text strokeType="OUTSIDE" strokeWidth="0.0" text="계좌등록"
+			BorderPane.alignment="CENTER">
+			<font>
+				<Font size="35.0" />
+			</font>
+			<BorderPane.margin>
+				<Insets top="30.0" />
+			</BorderPane.margin>
+		</Text>
+	</top>
+	<bottom>
+		<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0"
+			spacing="50.0" BorderPane.alignment="CENTER">
+			<children>
+				<Button fx:id="btnCommit" mnemonicParsing="false"
+					prefHeight="70.0" prefWidth="138.0" text="계좌등록">
+					<font>
+						<Font size="23.0" />
+					</font>
+				</Button>
+				<Button fx:id="btnPass" mnemonicParsing="false"
+					onAction="#handleBtnPass" prefHeight="70.0" prefWidth="138.0"
+					text="건너뛰기">
+					<font>
+						<Font size="23.0" />
+					</font>
+				</Button>
+			</children>
+		</HBox>
+	</bottom>
+	<center>
+		<VBox alignment="CENTER_LEFT" fillWidth="false"
+			prefHeight="229.0" prefWidth="208.0" spacing="30.0"
+			BorderPane.alignment="CENTER">
+			<children>
+				<ComboBox fx:id="comboBank" prefHeight="40.0"
+					prefWidth="190.0" promptText="은행명" />
+				<TextField fx:id="txtSerial" prefHeight="40.0"
+					prefWidth="192.0" />
+				<TextField fx:id="txtBankPwd" prefHeight="44.0"
+					prefWidth="190.0" />
+			</children>
+		</VBox>
+	</center>
+	<left>
+		<VBox alignment="CENTER_RIGHT" prefHeight="235.0"
+			prefWidth="181.0" spacing="50.0" BorderPane.alignment="CENTER">
+			<children>
+				<Text strokeType="OUTSIDE" strokeWidth="0.0" text="은행">
+					<font>
+						<Font size="28.0" />
+					</font>
+				</Text>
+				<Text strokeType="OUTSIDE" strokeWidth="0.0" text="계좌번호(-생략)">
+					<font>
+						<Font size="28.0" />
+					</font>
+				</Text>
+				<Text strokeType="OUTSIDE" strokeWidth="0.0" text="계좌비밀번호">
+					<font>
+						<Font size="28.0" />
+					</font>
+				</Text>
+			</children>
+			<opaqueInsets>
+				<Insets />
+			</opaqueInsets>
+			<BorderPane.margin>
+				<Insets right="30.0" />
+			</BorderPane.margin>
+		</VBox>
+	</left>
+	<right>
+		<VBox prefHeight="200.0" prefWidth="100.0"
+			BorderPane.alignment="CENTER">
+			<children>
+				<Text fx:id="txtError" fill="#f80505" strokeType="OUTSIDE"
+					strokeWidth="0.0">
+					<font>
+						<Font size="25.0" />
+					</font>
+					<VBox.margin>
+						<Insets top="20.0" />
+					</VBox.margin>
+				</Text>
+			</children>
+		</VBox>
+	</right>
+</BorderPane>

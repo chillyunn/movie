@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane fx:id="SignUp" prefHeight="544.0"
+	prefWidth="689.0" xmlns="http://javafx.com/javafx"
+	xmlns:fx="http://javafx.com/fxml"
+	fx:controller="application.SignUpController">
+	<center>
+		<VBox alignment="CENTER_LEFT" fillWidth="false"
+			prefHeight="382.0" prefWidth="471.0" spacing="10.0"
+			BorderPane.alignment="CENTER">
+			<children>
+				<TextField fx:id="txtId">
+					<font>
+						<Font size="20.0" />
+					</font>
+				</TextField>
+				<TextField fx:id="txtPwd">
+					<font>
+						<Font size="20.0" />
+					</font>
+				</TextField>
+				<TextField fx:id="txtName">
+					<font>
+						<Font size="20.0" />
+					</font>
+				</TextField>
+				<ComboBox fx:id="comboAge" prefHeight="39.0"
+					prefWidth="270.0" promptText="나이" />
+				<ComboBox fx:id="comboGender" prefHeight="39.0"
+					prefWidth="272.0" promptText="성별" />
+				<HBox alignment="CENTER" prefHeight="44.0" prefWidth="273.0">
+					<children>
+						<ComboBox fx:id="comboFphone" prefHeight="44.0"
+							prefWidth="98.0" promptText="첫쨰자리" />
+						<Text strokeType="OUTSIDE" strokeWidth="0.0" text="-">
+							<font>
+								<Font size="32.0" />
+							</font>
+						</Text>
+						<TextField fx:id="txtSecond" prefHeight="44.0"
+							prefWidth="82.0">
+							<font>
+								<Font size="20.0" />
+							</font>
+						</TextField>
+						<Text strokeType="OUTSIDE" strokeWidth="0.0" text="-">
+							<font>
+								<Font size="32.0" />
+							</font>
+						</Text>
+						<TextField fx:id="txtLast" prefHeight="44.0"
+							prefWidth="75.0">
+							<font>
+								<Font size="20.0" />
+							</font>
+						</TextField>
+					</children>
+				</HBox>
+			</children>
+			<opaqueInsets>
+				<Insets />
+			</opaqueInsets>
+			<padding>
+				<Insets left="20.0" />
+			</padding>
+			<BorderPane.margin>
+				<Insets left="60.0" />
+			</BorderPane.margin>
+		</VBox>
+	</center>
+	<top>
+		<Text strokeType="OUTSIDE" strokeWidth="0.0" text="회원가입"
+			BorderPane.alignment="CENTER">
+			<font>
+				<Font size="32.0" />
+			</font>
+			<BorderPane.margin>
+				<Insets top="30.0" />
+			</BorderPane.margin>
+		</Text>
+	</top>
+	<left>
+		<VBox alignment="CENTER_RIGHT" prefHeight="238.0"
+			prefWidth="144.0" spacing="20.0" BorderPane.alignment="CENTER">
+			<children>
+				<Text strokeType="OUTSIDE" strokeWidth="0.0" text="ID">
+					<font>
+						<Font size="30.0" />
+					</font>
+				</Text>
+				<Text strokeType="OUTSIDE" strokeWidth="0.0" text="PWD">
+					<font>
+						<Font size="30.0" />
+					</font>
+				</Text>
+				<Text strokeType="OUTSIDE" strokeWidth="0.0" text="이름">
+					<font>
+						<Font size="30.0" />
+					</font>
+				</Text>
+				<Text strokeType="OUTSIDE" strokeWidth="0.0" text="나이">
+					<font>
+						<Font size="30.0" />
+					</font>
+				</Text>
+				<Text strokeType="OUTSIDE" strokeWidth="0.0" text="성별">
+					<font>
+						<Font size="30.0" />
+					</font>
+				</Text>
+				<Text strokeType="OUTSIDE" strokeWidth="0.0" text="전화번호">
+					<font>
+						<Font size="30.0" />
+					</font>
+				</Text>
+			</children>
+		</VBox>
+	</left>
+	<bottom>
+		<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0"
+			spacing="70.0" BorderPane.alignment="CENTER">
+			<children>
+				<Button fx:id="btnCommit" mnemonicParsing="false" text="다음">
+					<font>
+						<Font size="30.0" />
+					</font>
+				</Button>
+				<Button fx:id="btnCancle" mnemonicParsing="false"
+					onAction="#handleBtnCancle" text="취소">
+					<font>
+						<Font size="30.0" />
+					</font>
+				</Button>
+			</children>
+			<padding>
+				<Insets bottom="20.0" />
+			</padding>
+		</HBox>
+	</bottom>
+	<right>
+		<Text fx:id="txtError" fill="#f80505" strokeType="OUTSIDE"
+			strokeWidth="0.0" BorderPane.alignment="TOP_LEFT">
+			<font>
+				<Font size="25.0" />
+			</font>
+			<BorderPane.margin>
+				<Insets right="30.0" top="45.0" />
+			</BorderPane.margin>
+		</Text>
+	</right>
+</BorderPane>

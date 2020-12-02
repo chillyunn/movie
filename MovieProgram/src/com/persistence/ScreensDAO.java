@@ -96,26 +96,15 @@ public class ScreensDAO {
 		PreparedStatement pstmt2 = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		ResultSet rs1 = null;
 		ResultSet rs2 = null;
 		String ScrId = null;
 		int screenCount = 0;
 		String[] result = new String[list.size()];
-		String SQL1 = "SELECT thtAddress FROM Theaters WHERE thtid=?";
+
 		String SQL = "SELECT ScrId FROM Screens WHERE ThtId = ?";
 		String SQL2 = "SELECT count(*) FROM seats where scrid = ? and thtId = ?";
 		try {
 			conn = DBConnection.getConnection(); //SQL1 구문 실행
-			
-			pstmt= conn.prepareStatement(SQL1);
-			pstmt.setString(1,thtId);
-			rs1= pstmt.executeQuery();
-			if(rs.next())
-			{
-				String thtAddress = rs.getString("thtAddress");
-				list.add(thtAddress);
-			}
-			
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, thtId);
 			rs = pstmt.executeQuery();
@@ -166,7 +155,7 @@ public class ScreensDAO {
 		return result;
 	}
 
-	public ArrayList<ScreensDTO> insert(String ScrId, String ThtId, String ScrType, String ScrPremium) {
+	public static ArrayList<ScreensDTO> insert(String ScrId, String ThtId, String ScrType, String ScrPremium) {
 		ArrayList<ScreensDTO> dtos = new ArrayList<ScreensDTO>();
 
 		PreparedStatement pstmt = null;
