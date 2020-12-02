@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import com.oracle.DBConnection;
+import com.setting.ConnectSetting;
 import java.time.LocalDateTime;
 
 public class ReviewsDAO {
@@ -18,7 +18,7 @@ public class ReviewsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM Reviews";
 		try {
-			conn =DBConnection. getConnection();
+			conn =ConnectSetting. getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -63,7 +63,7 @@ public class ReviewsDAO {
 
 		String preQuery = "INSERT INTO Reviews(RevId,GusId,MovTitle,RevDate,Revcontent,RevGrade) VALUES(?,?,?,?,?,?)";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, RevId);
 			pstmt.setString(2, GusId);
@@ -99,7 +99,7 @@ public class ReviewsDAO {
 		String SQL = "UPDATE Reviews SET RevContent=?,RevGrade=?,RevDate=SYSDATE WHERE GusId=? AND MovTitle=?";
 		
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, RevContent);
 			pstmt.setString(2, RevGrade);

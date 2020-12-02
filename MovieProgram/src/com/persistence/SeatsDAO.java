@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import com.oracle.DBConnection;
+import com.setting.ConnectSetting;
 
 public class SeatsDAO {
 	public static ArrayList<SeatsDTO> selectAll() {
@@ -24,7 +24,7 @@ public class SeatsDAO {
 		String SQL = "SELECT * FROM Seats";
 
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -64,7 +64,7 @@ public class SeatsDAO {
 
 		String preQuery = "INSERT INTO Seats(SeatId,ThtId,ScrId) VALUES(?,?,?)";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, SeatId);
 			pstmt.setString(2, ThtId);

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import com.oracle.DBConnection;
+import com.setting.ConnectSetting;
 
 public class TheatersDAO {
 	public ArrayList<TheatersDTO> selectAll() {
@@ -18,7 +18,7 @@ public class TheatersDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM Theaters";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -57,7 +57,7 @@ public class TheatersDAO {
 		
 		String SQL = "SELECT ThtID FROM Theaters";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -92,7 +92,7 @@ public class TheatersDAO {
 		String ThtId = null;
 		String SQL = "SELECT ThtId FROM Theaters WHERE ThtId = ?";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
@@ -133,7 +133,7 @@ public class TheatersDAO {
 		ResultSet rs = null;
 		String preQuery = "INSERT INTO Theaters(ThtId,ThtAddress) VALUES(?,?)";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, id);
 			pstmt.setString(2, address);
@@ -163,7 +163,7 @@ public class TheatersDAO {
 		String SQL = "UPDATE Theaters SET ThtId=?,ThtAddress=? WHERE ThtId=?";
 
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, newId);
 			pstmt.setString(2, ThtAddress);
@@ -193,7 +193,7 @@ public class TheatersDAO {
 		String SQL = "DELETE FROM Theaters WHERE ThtId=?";
 
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, ThtId);
 			pstmt.executeUpdate();

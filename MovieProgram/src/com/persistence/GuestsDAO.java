@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import com.oracle.DBConnection;
+import com.setting.ConnectSetting;
 
 public class GuestsDAO {
 	public static ArrayList<GuestsDTO> selectAll() {
@@ -18,7 +18,7 @@ public class GuestsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT * FROM Guests";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -60,7 +60,7 @@ public class GuestsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT GusId FROM Guests";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -97,7 +97,7 @@ public class GuestsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT GusGender FROM Guests";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -134,7 +134,7 @@ public class GuestsDAO {
 		ResultSet rs = null;
 		String SQL = "SELECT GusAge FROM Guests";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
@@ -173,7 +173,7 @@ public class GuestsDAO {
 		ResultSet rs = null;
 		String preQuery = "INSERT INTO Guests(GusId,GusPw,GusName,GusAge,GusGender,GusPhone) VALUES(?,?,?,?,?,?)";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(preQuery);
 			pstmt.setString(1, GusId);
 			pstmt.setString(2, GusPw);
@@ -208,7 +208,7 @@ public class GuestsDAO {
 		String GusId = null;
 		String SQL = "SELECT GusId FROM Guests WHERE Gusid = ?";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
@@ -248,7 +248,7 @@ public class GuestsDAO {
 		String GusId = null;
 		String SQL = "SELECT GusId FROM Guests WHERE GusName = ? and GusPhone = ?";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, name);
 			pstmt.setString(2, phone);
@@ -286,7 +286,7 @@ public class GuestsDAO {
 		String GusPw = null;
 		String SQL = "SELECT GusPw FROM Guests WHERE GusId = ? and GusName = ?";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, id);
 			pstmt.setString(2, name);
@@ -324,7 +324,7 @@ public class GuestsDAO {
 		Connection conn = null;
 		String SQL = "UPDATE Guests SET GusPw=?, GusName=?, GusAge=?, GusPhone=? WHERE GusId=?";
 		try {
-			conn = DBConnection.getConnection();
+			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(SQL);
 
 			pstmt.setString(1, pw);

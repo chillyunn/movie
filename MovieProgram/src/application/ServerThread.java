@@ -16,8 +16,8 @@ import com.persistence.AccountsDAO;
 import com.persistence.GuestsDAO;
 import com.persistence.ScreensDAO;
 import com.persistence.TheatersDAO;
+import com.setting.ConnectSetting;
 import com.setting.Protocol;
-import com.oracle.*;
 
 /**
  * 개별 클라이언트와 메세지를 주고 받는 스레드 Socket: 멤버변수, 생성자를 통해서 TestServer에서 할당 받는다. 1.
@@ -55,7 +55,7 @@ public class ServerThread extends Thread {
 	}
 
 	private void service() throws IOException {
-		Connection conn = DBConnection.getConnection();
+		Connection conn = ConnectSetting.getConnection();
 		Statement stmt = null;
 		ResultSet rs = null;
 		Protocol protocol = null;
@@ -313,10 +313,6 @@ public class ServerThread extends Thread {
 	}
 
 	public void closeAll() throws IOException {
-		if (pw != null)
-			pw.close();
-		if (br != null)
-			br.close();
 		if (socket != null)
 			socket.close();
 	}

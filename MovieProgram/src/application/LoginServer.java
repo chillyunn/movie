@@ -5,14 +5,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 
-import com.oracle.DBConnection;
+import com.setting.ConnectSetting;
 
 public class LoginServer {
 	public static void main(String[] args) {
 		try {
 			ServerSocket sSocket = new ServerSocket(3000);
 			Socket socket = null;
-			Connection conn = DBConnection.getConnection();
+			Connection conn = ConnectSetting.getConnection();
 			try {
 				System.out.println("**서버 실행**");
 				// 다수의 클라이언트와 통신하기 위해 loop
