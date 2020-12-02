@@ -57,6 +57,52 @@ public class MoviesDAO {
 		}
 		return dtos;
 	}
+	public static String[] selectMov(String title) {
+		ArrayList<String> list = new ArrayList<String>();
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		String[]result = new String[list.size()];
+		
+		String SQL = "SELECT * FROM Movies where movetitle = ?";
+		try {
+			conn = ConnectSetting.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, title);
+			rs = pstmt.executeQuery(SQL);
+			while (rs.next()) {
+				list.add(rs.getString("movTitle"));
+				list.add(rs.getString("MovDirector"));
+				list.add(rs.getString("MovActor"));
+				list.add(rs.getString("MovGenre"));
+				list.add(rs.getString("MovStory"));
+				list.add(rs.getString("MovOpenDate"));
+				list.add(rs.getString("MovView"));
+				list.add(rs.getString("MovRuntime"));
+				list.add(rs.getString("MovRating"));
+				list.add(rs.getString("MovTrailer"));
+			}
+			result = list.toArray(result);
+		} catch (SQLException sqle) {
+			System.out.println("SELECT문에서 예외 발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		return result;
+	}
 
 	public static String[] selectTitle() {
 		ArrayList<String> list = new ArrayList<String>();
@@ -71,7 +117,7 @@ public class MoviesDAO {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
-				list.add(rs.getString("ThtId"));
+				list.add(rs.getString("movTitle"));
 			}
 			result = list.toArray(result);
 		} catch (SQLException sqle) {
@@ -95,7 +141,7 @@ public class MoviesDAO {
 		return result;
 	}
 
-	public ArrayList<MoviesDTO> insert(String MovTitle, String MovDirector, String MovActor, String MovGenre,
+	public static ArrayList<MoviesDTO> insert(String MovTitle, String MovDirector, String MovActor, String MovGenre,
 			String MovStory, String MovOpenDate, String MovView, String MovRuntime, String MovRating,
 			String MovTrailer) {
 		ArrayList<MoviesDTO> dtos = new ArrayList<MoviesDTO>();
@@ -194,5 +240,72 @@ public class MoviesDAO {
 		}
 
 		return dtos;
+	}
+	public static boolean EqualTitle(String title) {
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		String movTitle = null;
+		String SQL = "SELECT movTitle FROM Theaters WHERE movTitle = ?";
+		try {
+			conn = ConnectSetting.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, title);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				movTitle = rs.getString("movTitle");
+			else
+				movTitle = "";
+
+		} catch (SQLException sqle) {
+			System.out.println("equalTitle문에서 예외 발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		if (movTitle.equals(title))
+			return true;
+		else
+			return false;
+	}
+	public static void delete(String movTitle)
+	{
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		String SQL = "DELETE FROM Movies WHERE movTitle=?";
+
+		try {
+			conn = ConnectSetting.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, movTitle);
+			pstmt.executeUpdate();
+			System.out.println("DELETE성공: " + movTitle);
+		} catch (SQLException sqle) {
+			System.out.println("DELETE문에서 예외발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
 	}
 }

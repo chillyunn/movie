@@ -347,7 +347,7 @@ public class ServerThread extends Thread {
 					data = protocol.getData();
 					scrId = data[0];
 					protocol = new Protocol(Protocol.PT_THEATER, 6);
-					if (TheatersDAO.EqualId(scrId)) {
+					if (ScreensDAO.EqualId(scrId)) {
 						System.out.println("서버DB에 동일한 ID 존재"); // 삭제
 						ScreensDAO.delete(scrId);
 						protocol.setResult("1");
@@ -363,13 +363,58 @@ public class ServerThread extends Thread {
 			case Protocol.PT_MOVIE:
 				switch(packetCode)
 				{
-				case 1:
+				case 1: //영화 정보 요청
 					System.out.println("클라이언트가 영화정보 요청을 보냈습니다");
 					protocol = new Protocol(Protocol.PT_MOVIE, 2);
 					protocol.setData(MoviesDAO.selectTitle());
 					os.write(protocol.getPacket());
 					System.out.println("영화관 목록 전송 완료");
 					break;
+				case 3: //영화 추가 요청
+					System.out.println("클라이언트가 영화관추가 요청을 보냈습니다");
+					String[] data = protocol.getData();
+					String movTitle = data[0];
+					String movGenre = data[1];
+					String movOpendate = data[2];
+					String movActor = data[3];
+					String movDirector = data[4];
+					String movView = data[5];
+					String movRuntime = data[6];
+					String movStory = data[7];
+					String movRating = data[8];
+					String movTrailer = data[9];
+					
+					protocol = new Protocol(Protocol.PT_MOVIE, 4);
+					// title 중복확인
+					if (MoviesDAO.EqualTitle(movTitle)) {
+						System.out.println("서버DB에 동일한 Title 존재");
+						protocol.setResult("1");
+					} else {
+						System.out.println("서버DB에 동일한 Title 없음");
+						protocol.setResult("0");
+						MoviesDAO.insert(movTitle, movDirector,movActor,movGenre,movStory,movOpendate,movView,movRuntime,movRating,movTrailer);
+					}
+
+					os.write(protocol.getPacket());
+					System.out.println("영화 추가 결과 전송 완료");
+					break;
+				case 5: // 영화 삭제 요청
+					System.out.println("클라이언트가 상영관 삭제 요청을 보냈습니다");
+					data = protocol.getData();
+					movTitle = data[0];
+					protocol = new Protocol(Protocol.PT_THEATER, 6);
+					if (MoviesDAO.EqualTitle(movTitle)) {
+						System.out.println("서버DB에 동일한 ID 존재"); // 삭제
+						MoviesDAO.delete(movTitle);
+						protocol.setResult("1");
+					} else {
+						System.out.println("서버DB에 동일한 ID 없음"); // 삭제 실패
+						protocol.setResult("2");
+					}
+					os.write(protocol.getPacket());
+					System.out.println("영화관 삭제 결과 전송 완료");
+					break;
+				case 7: // 상영 시간표 정보 요청
 				}
 				break;
 			}// end switch
