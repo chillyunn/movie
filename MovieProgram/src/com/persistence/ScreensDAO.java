@@ -93,18 +93,29 @@ public class ScreensDAO {
 	public static String[] selectId(String thtId) {
 		ArrayList<String> list = new ArrayList<String>();
 		PreparedStatement pstmt = null;
+		PreparedStatement pstmt1 = null;
 		PreparedStatement pstmt2 = null;
 		Connection conn = null;
 		ResultSet rs = null;
+		ResultSet rs1 = null;
 		ResultSet rs2 = null;
 		String ScrId = null;
 		int screenCount = 0;
 		String[] result = new String[list.size()];
 
+		String SQL1 ="SELECT thtAddress FROM Theaters WHERE ThtId = ?";
 		String SQL = "SELECT ScrId FROM Screens WHERE ThtId = ?";
 		String SQL2 = "SELECT count(*) FROM seats where scrid = ? and thtId = ?";
 		try {
 			conn = ConnectSetting.getConnection(); //SQL1 구문 실행
+			
+			pstmt1 = conn.prepareStatement(SQL1);
+			pstmt1.setString(1, thtId);
+			rs1 = pstmt1.executeQuery();
+			if (rs1.next()) {//ScrId 첫 값 얻기
+				String thtAddress = rs1.getString("thtAddress");
+				list.add(thtAddress);
+			}
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, thtId);
 			rs = pstmt.executeQuery();
@@ -142,7 +153,19 @@ public class ScreensDAO {
 				if (rs != null) {
 					rs.close();
 				}
+				if (rs1 != null) {
+					rs.close();
+				}
+				if (rs2 != null) {
+					rs.close();
+				}
 				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (pstmt1 != null) {
+					pstmt.close();
+				}
+				if (pstmt2 != null) {
 					pstmt.close();
 				}
 				if (conn != null) {
@@ -189,6 +212,73 @@ public class ScreensDAO {
 		}
 		return dtos;
 
+	}
+	public static boolean EqualId(String id) {
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		String ScrId = null;
+		String SQL = "SELECT ScrId FROM Theaters WHERE ScrId = ?";
+		try {
+			conn = ConnectSetting.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				ScrId = rs.getString("ScrId");
+			else
+				ScrId = "";
+
+		} catch (SQLException sqle) {
+			System.out.println("equalId문에서 예외 발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		if (id.equals(ScrId))
+			return true;
+		else
+			return false;
+	}
+	public static void delete(String scrId)
+	{
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		String SQL = "DELETE FROM Screens WHERE scrId=?";
+
+		try {
+			conn = ConnectSetting.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, scrId);
+			pstmt.executeUpdate();
+			System.out.println("DELETE성공: " + scrId);
+		} catch (SQLException sqle) {
+			System.out.println("DELETE문에서 예외발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
 	}
 
 }

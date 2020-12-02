@@ -12,10 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import com.persistence.AccountsDAO;
-import com.persistence.GuestsDAO;
-import com.persistence.ScreensDAO;
-import com.persistence.TheatersDAO;
+import com.persistence.*;
 import com.setting.ConnectSetting;
 import com.setting.Protocol;
 
@@ -27,6 +24,10 @@ import com.setting.Protocol;
  *
  */
 public class ServerThread extends Thread {
+	final int LOWER_A=65;
+	final int MAX_SEAT_IN_LINE=10;
+	final String FALSE="0";
+	final String TRUE="1";
 	// 멤버변수로 선언
 	private Socket socket;
 
@@ -143,6 +144,7 @@ public class ServerThread extends Thread {
 					System.out.println("클라이언트가 회원가입 정보를 보냈습니다");
 					String[] data = protocol.getData();
 					String id = data[0];
+					tmp_data = new String[1];
 					tmp_data[0] = id;
 					String password = data[1];
 					String name = data[2];
@@ -284,7 +286,7 @@ public class ServerThread extends Thread {
 					os.write(protocol.getPacket());
 					System.out.println("영화관 수정 결과 전송 완료");
 					break;
-				case 9: // 영화관 버튼 눌렀을 때 그 영화관에 해당하는 상영관id/좌석수 출력
+				case 9: // 영화관 버튼 눌렀을 때 그 영화관에 해당하는 영화관위치+상영관id/좌석수 출력
 					System.out.println("클라이언트가 영화관 상세정보 요청을 보냈습니다");
 					data = protocol.getData();
 					String thtId = data[0];
@@ -297,11 +299,74 @@ public class ServerThread extends Thread {
 					System.out.println("클라이언트가 상영관 추가 요청을 보냈습니다");
 					data = protocol.getData();
 					String scrId = data[0];
-					String scrType = data[1];
-					String scrPremium = data[2];
-					String seatNum =data[3];
-					
-					
+					thtId = data[1];
+					String scrType = data[2];
+					String scrPremium = data[3];
+					int seatNum = Integer.parseInt(data[4]);
+
+					protocol = new Protocol(Protocol.PT_THEATER, 12);
+					// id 중복확인
+					if (ScreensDAO.EqualId(scrId)) {
+						System.out.println("서버DB에 동일한 ID 존재");
+						protocol.setResult(FALSE);
+					} else {
+						System.out.println("서버DB에 동일한 ID 없음");
+						protocol.setResult(TRUE);
+						ScreensDAO.insert(scrId, thtId, scrType, scrPremium);
+						char temp = 0;
+						if (seatNum < MAX_SEAT_IN_LINE) { //좌석수가 10미만이면 a1~a10까지 좌석생성
+							temp = (char) LOWER_A;
+							for (int j = 0; j < seatNum % MAX_SEAT_IN_LINE; j++) {
+								String tem = Character.toString(temp) + (j + 1);
+								SeatsDAO.insert(tem, thtId, scrId);
+							}
+						} else if(seatNum>=MAX_SEAT_IN_LINE){ //좌석수가 10이상이면 좌석수/10으로 알파벳구분하여 알파벳1~알파벳10까지 생성
+							for (int a = LOWER_A, i = 0; i < seatNum / MAX_SEAT_IN_LINE; i++) {
+
+								for (int j = 1; j < MAX_SEAT_IN_LINE; j++) {
+									temp = (char) LOWER_A;
+									String tem = Character.toString(temp) + j;
+									SeatsDAO.insert(tem, thtId, scrId);
+								}
+								a++;
+							}//10으로 나눈후 남은 수만큼의 좌석 생성 ex)57-> 위에서 50자리 생성후 7자리 생성
+							for (int j = 1; j < seatNum % MAX_SEAT_IN_LINE; j++) {
+								String tem = Character.toString(temp) + j;
+								SeatsDAO.insert(tem, thtId, scrId);
+							}
+						}
+					}
+					os.write(protocol.getPacket());
+					System.out.println("영화관 추가 결과 전송 완료");
+					break;
+				case 13: //상영관 삭제 요청
+					System.out.println("클라이언트가 상영관 삭제 요청을 보냈습니다");
+					data = protocol.getData();
+					scrId = data[0];
+					protocol = new Protocol(Protocol.PT_THEATER, 6);
+					if (TheatersDAO.EqualId(scrId)) {
+						System.out.println("서버DB에 동일한 ID 존재"); // 삭제
+						ScreensDAO.delete(scrId);
+						protocol.setResult("1");
+					} else {
+						System.out.println("서버DB에 동일한 ID 없음"); // 삭제 실패
+						protocol.setResult("2");
+					}
+					os.write(protocol.getPacket());
+					System.out.println("영화관 삭제 결과 전송 완료");
+					break;
+				}
+				break;
+			case Protocol.PT_MOVIE:
+				switch(packetCode)
+				{
+				case 1:
+					System.out.println("클라이언트가 영화정보 요청을 보냈습니다");
+					protocol = new Protocol(Protocol.PT_MOVIE, 2);
+					protocol.setData(MoviesDAO.selectTitle());
+					os.write(protocol.getPacket());
+					System.out.println("영화관 목록 전송 완료");
+					break;
 				}
 				break;
 			}// end switch

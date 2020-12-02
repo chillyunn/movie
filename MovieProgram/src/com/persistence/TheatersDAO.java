@@ -118,7 +118,6 @@ public class TheatersDAO {
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
-
 		}
 		if (id.equals(ThtId))
 			return true;

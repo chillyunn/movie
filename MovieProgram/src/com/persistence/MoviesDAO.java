@@ -58,21 +58,22 @@ public class MoviesDAO {
 		return dtos;
 	}
 
-	public ArrayList<MoviesDTO> selectTitle() {
-		ArrayList<MoviesDTO> dtos = new ArrayList<MoviesDTO>();
+	public static String[] selectTitle() {
+		ArrayList<String> list = new ArrayList<String>();
 		Statement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
+		String[]result = new String[list.size()];
+		
 		String SQL = "SELECT MovTitle FROM Movies";
 		try {
 			conn = ConnectSetting.getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
-				String MovTitle = rs.getString("MovTitle");
-				MoviesDTO dto = new MoviesDTO(MovTitle);
-				dtos.add(dto);
+				list.add(rs.getString("ThtId"));
 			}
+			result = list.toArray(result);
 		} catch (SQLException sqle) {
 			System.out.println("SELECT문에서 예외 발생");
 			sqle.printStackTrace();
@@ -91,7 +92,7 @@ public class MoviesDAO {
 				throw new RuntimeException(e.getMessage());
 			}
 		}
-		return dtos;
+		return result;
 	}
 
 	public ArrayList<MoviesDTO> insert(String MovTitle, String MovDirector, String MovActor, String MovGenre,
