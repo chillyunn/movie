@@ -98,7 +98,7 @@ public class ScreensDAO {
 		ResultSet rs = null;
 		ResultSet rs2 = null;
 		String ScrId = null;
-		String screenCount = null;
+		int screenCount = 0;
 		String[] result = new String[list.size()];
 
 		String SQL = "SELECT ScrId FROM Screens WHERE ThtId = ?";
@@ -116,7 +116,10 @@ public class ScreensDAO {
 			pstmt2.setString(1, ScrId);
 			pstmt2.setString(2, thtId);
 			rs2 = pstmt2.executeQuery();
-
+			if (rs2.next()) {
+				screenCount = rs2.getInt(1);
+				list.add(ScrId +"/"+ screenCount); //상영관ID+좌석수 저장
+				//ScrId 첫값얻은후 첫 상영관+좌석수 리스트에 저장
 			while (true) {
 				if (rs.next()) {
 					ScrId = rs.getString("ScrId");
@@ -124,12 +127,14 @@ public class ScreensDAO {
 					break;
 
 				if (rs2.next()) {
-					screenCount = rs.getString("count(*)");
+					screenCount = rs2.getInt(1);
+				
 				}
-			}
-			list.add(ScrId + screenCount); //상영관ID+좌석수 저장
+				list.add(ScrId +"/"+ screenCount); //상영관ID+좌석수 저장
+			}//sql문 끝날때까지 상영관+좌석수 리스트에 저장
 			result = list.toArray(result);
-		} catch (SQLException sqle) {
+			}
+			} catch (SQLException sqle) {
 			System.out.println("SELECT문에서 예외 발생");
 			sqle.printStackTrace();
 		} finally {
