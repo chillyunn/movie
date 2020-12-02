@@ -75,7 +75,6 @@ public class Protocol {
 				case 2:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
 					break;
-
 				}
 				break;
 			case PT_SIGN_UP:
@@ -85,35 +84,35 @@ public class Protocol {
 							+ LEN_DATA_DETAIL];
 					break;
 				case 2:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_ID];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
 					break;
 				case 3:
-					packet = new byte[LEN_MAX];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_ACCOUNT];
 					break;
 				case 4:
-					packet = new byte[LEN_MAX];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + 1];
 					break;
 				}
 				break;
 			case PT_FIND:
 				switch (protocolCode) {
 				case 1:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE+ LEN_DATA_FIND];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_FIND];
 					break;
 				case 2:
 					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_FIND];
 					break;
 				case 3:
-					packet = new byte[LEN_MAX];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE];
 					break;
 				case 4:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE+ LEN_MAX];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_FIND];
 					break;
 				case 5:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_MAX];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_DATA_FIND];
 					break;
 				case 6:
-					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE + LEN_MAX];
+					packet = new byte[LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE];
 					break;
 				}
 				break;
@@ -351,9 +350,5 @@ public class Protocol {
 		// String(byte[] bytes, int offset, int length)
 		return new String(packet, LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE, 1).trim();
 	}
-
-//	public String getData() {
-//		return new String(packet, LEN_PROTOCOL_TYPE + LEN_PROTOCOL_CODE, LEN_MAX - 2).trim();
-//	}
 
 }
