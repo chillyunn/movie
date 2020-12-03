@@ -54,6 +54,41 @@ public class TicketsDAO {
 		return dtos;
 	}
 
+	public static ArrayList<String> selectSeat(String TtId) {
+		PreparedStatement pstmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		ArrayList<String> result = new ArrayList<String>();
+		String SQL = "SELECT SeatId FROM Tickets where Ttid = ?";
+		try {
+			conn = ConnectSetting.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1,TtId);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				result.add(rs.getString("SeatId"));
+			}
+		} catch (SQLException sqle) {
+			System.out.println("SELECT문에서 예외 발생");
+			sqle.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		return result;
+	}
+
 	public ArrayList<TicketsDTO> insert(String TicId, String ScrId, String ThtId, String SeatId, String GusId,
 			String TtId, String MovTitle) {
 		ArrayList<TicketsDTO> dtos = new ArrayList<TicketsDTO>();

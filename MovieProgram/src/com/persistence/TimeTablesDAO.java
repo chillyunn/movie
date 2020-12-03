@@ -58,7 +58,7 @@ public class TimeTablesDAO {
 		ResultSet rs = null;
 		String[]result = new String[list.size()];
 		
-		String SQL = "SELECT * FROM Movies where thtId = ?";
+		String SQL = "SELECT * FROM TimeTables where thtId = ?";
 		try {
 			conn = ConnectSetting.getConnection();
 			pstmt = conn.prepareStatement(SQL);
